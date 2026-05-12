@@ -1,4 +1,4 @@
-const API_KEY = "YOUR_API_KEY";
+const API_KEY = "3DG5915PZ8Y0JUHW";
 
 async function getGoldData() {
   const response = await fetch(
@@ -19,3 +19,5 @@ async function getGoldData() {
 }
 
 getGoldData();
+
+
