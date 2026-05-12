@@ -17,5 +17,8 @@
   "scripts": {
     "test": "npm start",
     "start": "node server.js"
+  },
+  "dependencies": {
+    "pdfkit": "^0.18.0"
   }
 }
