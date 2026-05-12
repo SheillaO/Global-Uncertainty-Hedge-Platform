@@ -19,6 +19,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "node-fetch": "^3.3.2",
     "nodemailer": "^8.0.7",
     "pdfkit": "^0.18.0",
     "yahoo-finance2": "^3.14.0"
