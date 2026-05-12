@@ -1,24 +1,37 @@
-const API_KEY = "3DG5915PZ8Y0JUHW";
+/**
+ * Fetches live commodity data from Alpha Vantage
+ * @param {string} symbol - The commodity function (e.g., "NATURAL_GAS", "WHEAT")
+ */
+export async function getAlphaPrice(symbol) {
+  // Using the API key from your environment variables for security
+  const API_KEY = process.env.ALPHA_VANTAGE_KEY || "3DG5915PZ8Y0JUHW";
 
-export async function getCommodityData(symbol, customer) {
-  // We use symbols like WTI, GOLD, SILVER from your HTML
-  const response = await fetch(
-    `https://alphavantage.co{symbol}&apikey=${API_KEY}`,
-  );
+  try {
+    // 1. Correct Alpha Vantage URL structure for Commodities
+    const url = `https://alphavantage.co{symbol}&interval=monthly&apikey=${API_KEY}`;
 
-  const data = await response.json();
-  const quote = data["Global Quote"];
+    const response = await fetch(url);
+    const json = await response.json();
 
-  if (!quote) throw new Error("Market data not found");
+    // 2. Alpha Vantage commodity data is usually in json.data[0]
+    // Some endpoints use "Realtime Commodity Exchange Rate"
+    const latestData = json.data ? json.data[0] : null;
 
-  const tradeData = {
-    customer: customer,
-    commodity: symbol,
-    price: quote["05. price"],
-    market: "Global Exchange",
-    currency: "USD", // You can update this based on your currency selector
-  };
+    if (!latestData && !json["Realtime Commodity Exchange Rate"]) {
+      throw new Error(`No data found for ${symbol}. Check your API limits.`);
+    }
 
-  // Trigger the emails and PDFs
-  marketRequestEmitter.emit("commodityRequest", tradeData);
+    // 3. Return a clean object for the route handler
+    return {
+      price: latestData
+        ? latestData.value
+        : json["Realtime Commodity Exchange Rate"]["5. Exchange Rate"],
+      market: "Alpha Vantage Global",
+      currency: "USD", // Alpha Vantage commodities are typically USD-based
+      unit: json.unit || "unit",
+    };
+  } catch (error) {
+    console.error("Alpha Vantage API Error:", error.message);
+    throw new Error("Failed to fetch data from Alpha Vantage.");
+  }
 }
