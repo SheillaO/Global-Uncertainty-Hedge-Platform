@@ -3,6 +3,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { getData } from "./getData.js";
 
+
 export async function saveTrade(newTrade) {
   try {
     const trades = await getData();
