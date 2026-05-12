@@ -1,7 +1,7 @@
 import { getData } from "../utils/getData.js";
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
-import { addNewSighting } from "../utils/addNewSighting.js";
+import { saveTrade } from "../utils/saveTrade.js";
 import { sanitizeInput } from "../utils/sanitizeInput.js";
 import { sightingEvents } from "../events/sightingEvents.js";
 import { stories } from "../data/stories.js";

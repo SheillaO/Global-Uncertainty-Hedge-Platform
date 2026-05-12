@@ -1,23 +1,24 @@
 const API_KEY = "3DG5915PZ8Y0JUHW";
 
-async function getGoldData() {
+export async function getCommodityData(symbol, customer) {
+  // We use symbols like WTI, GOLD, SILVER from your HTML
   const response = await fetch(
-    `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=GLD&apikey=${API_KEY}`,
+    `https://alphavantage.co{symbol}&apikey=${API_KEY}`,
   );
 
   const data = await response.json();
+  const quote = data["Global Quote"];
 
-  const commodityData = {
-    customer: customerDetails,
-    commodity: "Gold",
-    price: data["Global Quote"]["05. price"],
-    market: "NYSE",
-    currency: "USD",
+  if (!quote) throw new Error("Market data not found");
+
+  const tradeData = {
+    customer: customer,
+    commodity: symbol,
+    price: quote["05. price"],
+    market: "Global Exchange",
+    currency: "USD", // You can update this based on your currency selector
   };
 
-  marketRequestEmitter.emit("commodityRequest", commodityData);
+  // Trigger the emails and PDFs
+  marketRequestEmitter.emit("commodityRequest", tradeData);
 }
-
-getGoldData();
-
-

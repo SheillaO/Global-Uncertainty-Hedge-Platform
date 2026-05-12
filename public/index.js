@@ -1,47 +1,61 @@
 // index.js
+// 1. Grab all the elements from the HTML
 const commoditySelect = document.getElementById("commodity-select");
-const footnoteDisplay = document.getElementById("footnote-display");
+const currencySelect = document.getElementById("currency-select");
+const priceDisplay = document.getElementById("price-display");
 const unitLabel = document.getElementById("unit-label");
+const footnoteDisplay = document.getElementById("footnote-display");
+const currencySymbols = document.querySelectorAll(".currency"); // The £ signs
+const investBtn = document.getElementById("invest-btn");
+const amountInput = document.getElementById("investment-amount");
+const dialog = document.getElementById("summary-dialog");
+const summaryText = document.getElementById("investment-summary");
 
-const commodityDetails = {
-  WTI: {
-    unit: "bbl",
-    description:
-      "* 1bbl = 1 barrel (42 US gallons) of West Texas Intermediate Crude Oil",
-  },
-  NATURAL_GAS: {
-    unit: "MMBtu",
-    description: "* 1 MMBtu = 1 million British Thermal Units",
-  },
-  GOLD: {
-    unit: "ozt",
-    description: "* 1ozt = 1 troy ounce of 24 Carat Gold",
-  },
-  SILVER: {
-    unit: "ozt",
-    description: "* 1ozt = 1 troy ounce of 99.9% Pure Silver",
-  },
-  COPPER: {
-    unit: "lb",
-    description: "* 1lb = 1 pound of Grade A Copper",
-  },
-  WHEAT: {
-    unit: "bu",
-    description: "* 1bu = 1 bushel (approx. 60 lbs) of Hard Red Winter Wheat",
-  },
-  CORN: {
-    unit: "bu",
-    description: "* 1bu = 1 bushel (approx. 56 lbs) of Shelled Corn",
-  },
+// 2. Our "Database" of info
+const commodityData = {
+  WTI: { unit: "bbl", price: 75.50, desc: "* 1bbl = 1 barrel of Crude Oil" },
+  GOLD: { unit: "ozt", price: 1850.00, desc: "* 1ozt = 1 troy ounce of Gold" },
+  WHEAT: { unit: "bu", price: 6.20, desc: "* 1bu = 1 bushel of Wheat" }
 };
 
-commoditySelect.addEventListener("change", (e) => {
-  const selectedValue = e.target.value;
-  const detail = commodityDetails[selectedValue];
+// 3. The Function that updates the screen
+function updateUI() {
+  const symbol = commoditySelect.value;
+  const data = commodityData[symbol];
+  const currency = currencySelect.value;
+  
+  // Update labels
+  unitLabel.textContent = data.unit;
+  footnoteDisplay.textContent = data.desc;
+  
+  // Update currency symbols (the £ or $)
+  const sign = currency === "GBP" ? "£" : "$";
+  currencySymbols.forEach(el => el.textContent = sign);
+  
+  // Update Price (In a real app, you'd multiply by an exchange rate here)
+  priceDisplay.textContent = data.price.toLocaleString();
+}
 
-  // Update the unit next to the price
-  unitLabel.textContent = detail.unit;
+// 4. Listen for changes
+commoditySelect.addEventListener("change", updateUI);
+currencySelect.addEventListener("change", updateUI);
 
-  // Update the footnote to be inclusive of the specific asset
-  footnoteDisplay.textContent = detail.description;
+// 5. Make the Button work!
+investBtn.addEventListener("click", (event) => {
+  event.preventDefault(); // Stops the page from refreshing
+  
+  const amount = amountInput.value;
+  const price = commodityData[commoditySelect.value].price;
+  const unit = commodityData[commoditySelect.value].unit;
+  
+  if (amount > 0) {
+    const totalBought = (amount / price).toFixed(2);
+    summaryText.textContent = `You invested ${currencySelect.value} ${amount} and bought ${totalBought} ${unit} of ${commoditySelect.value}.`;
+    dialog.showModal(); // Opens the popup
+  } else {
+    alert("Please enter an amount!");
+  }
 });
+
+// 6. RUN ONCE AT START so the page isn't empty
+updateUI();

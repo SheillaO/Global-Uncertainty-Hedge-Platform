@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 function generatePDF(data) {
   const doc = new PDFDocument();
 
-  doc.pipe(fs.createWriteStream("report.pdf"));
+  doc.pipe(fs.createWriteStream("trade-${Date.now()}.pdf"));
 
   doc.fontSize(25).text("Commodity Report", 100, 100);
 
