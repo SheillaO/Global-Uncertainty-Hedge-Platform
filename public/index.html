@@ -4,40 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="GoldDigger - Invest in gold with ease. Get live prices and make informed decisions.">
+    <meta name="description" content="Global Trade - Real-time commodity trading for metals, energy, and agriculture.">
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Saira+Stencil+One&display=swap"
-    rel="stylesheet">
-    <title>GoldDigger</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <title>Global Trade | Commodity Markets</title>
 </head>
 
 <body>
     <main>
-        <h1 class="title">GoldDigger</h1>
-        <img src="gold.png" alt="gold bars and nuggets">
-        <section class="price-info-container">
-            <p>£<span id="price-display" class="price" aria-live="assertive">----.--</span> / Oz*</p>
-            <p id="connection-status" class="status" aria-live="polite">Live Price 🟢</p>
+        <h1 class="title">Global Trade</h1>
+
+        <!-- Commodity Selector for Alpha Vantage / Yahoo Finance tickers -->
+        <section class="asset-selector">
+            <label for="commodity-select">Select Commodity</label>
+            <select id="commodity-select">
+                <optgroup label="Energy">
+                    <option value="WTI" data-unit="bbl">Crude Oil (WTI)</option>
+                    <option value="NATURAL_GAS" data-unit="MMBtu">Natural Gas</option>
+                </optgroup>
+                <optgroup label="Metals">
+                    <option value="GOLD" data-unit="ozt" selected>Gold</option>
+                    <option value="SILVER" data-unit="ozt">Silver</option>
+                    <option value="COPPER" data-unit="lb">Copper</option>
+                </optgroup>
+                <optgroup label="Agriculture">
+                    <option value="WHEAT" data-unit="bu">Wheat</option>
+                    <option value="CORN" data-unit="bu">Corn</option>
+                </optgroup>
+            </select>
         </section>
-        <form>
-            <label for="investment-amount">Amount to invest</label>
+
+        <section class="price-info-container">
+            <p>£<span id="price-display" class="price" aria-live="assertive">----.--</span> / <span
+                    id="unit-label">ozt</span>*</p>
+            <p id="connection-status" class="status" aria-live="polite">Market Open 🟢</p>
+        </section>
+
+        <form id="trade-form">
+            <label for="investment-amount">Investment Amount (GBP)</label>
             <div class="input-container">
                 <div class="currency">£</div>
-                <input type="number" id="investment-amount" placeholder="100.00" required>
+                <input type="number" id="investment-amount" placeholder="500.00" min="1" step="any" required>
             </div>
-            <button id="invest-btn" class="invest-btn" aria-label="Invest in gold now">Invest Now!</button>
+            <button type="submit" id="invest-btn" class="invest-btn">Execute Trade</button>
         </form>
-        <!-- This dialog opens after a successful purchase -->
-        <dialog class="outputs" role="dialog" aria-labelledby="dialog-title" aria-describedby="investment-summary" lang="en">
-            <h2>Summary</h2>
-            <p id="investment-summary">You just bought 1.3 ounces (ozt) for £3000. \n You will receive documentation shortly.</p>
-                <button aria-label="Close dialog and return to main page" autofocus>OK</button>
+
+        <dialog class="outputs" id="summary-dialog">
+            <h2 id="dialog-title">Trade Confirmation</h2>
+            <p id="investment-summary">Processing your order...</p>
+            <button formmethod="dialog" autofocus>Close</button>
         </dialog>
-        <p class="footnote">* 1oz = 1 troy ounce of 24 Carat Gold</p>
+
+        <p class="footnote" id="footnote-display">* Select an asset to view unit details</p>
     </main>
     <script type="module" src="index.js"></script>
 </body>
+
 </html>
