@@ -4,10 +4,10 @@ import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
+import { stories } from "../data/stories.js"; // Ensure this path is correct!
 
 // Helper function to decide which API to call
 async function fetchPrice(commodity) {
-  // Metals and Oil go to Yahoo, everything else (Ag/Gas) goes to Alpha
   if (["GOLD", "WTI", "SILVER"].includes(commodity)) {
     return await getYahooPrice(commodity);
   } else {
@@ -15,7 +15,7 @@ async function fetchPrice(commodity) {
   }
 }
 
-// 1. GET Handle: The Live Ticker (called every 30s by frontend)
+// 1. GET: The Live Ticker
 export async function handleGetPrice(res, symbol) {
   try {
     const data = await fetchPrice(symbol);
@@ -31,13 +31,12 @@ export async function handleGetPrice(res, symbol) {
   }
 }
 
-// 2. POST Handle: The "Invest Now" button
+// 2. POST: The "Invest Now" button
 export async function handlePost(res, req) {
   try {
     const body = await parseJSONBody(req);
     const { commodity, currency, amount } = body;
 
-    // Fetch the latest live price for the trade
     const liveData = await fetchPrice(commodity);
 
     const tradeData = {
@@ -49,19 +48,14 @@ export async function handlePost(res, req) {
       market: liveData.market || "Global Market",
     };
 
-    // Professional Sequence: Save to JSON -> PDF -> Email -> Logs
     await saveTrade(tradeData);
     marketRequestEmitter.emit("commodityRequest", tradeData);
 
-    // Send success back to the frontend
     sendResponse(
       res,
       201,
       "application/json",
-      JSON.stringify({
-        status: "Success",
-        data: tradeData,
-      }),
+      JSON.stringify({ status: "Success", data: tradeData }),
     );
   } catch (err) {
     console.error("Trade Error:", err.message);
@@ -72,4 +66,29 @@ export async function handlePost(res, req) {
       JSON.stringify({ error: err.message }),
     );
   }
+}
+
+// 3. GET: The Live News Stream (SSE)
+export async function handleNews(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+
+  const intervalId = setInterval(() => {
+    let randomIndex = Math.floor(Math.random() * stories.length);
+    // Important: data: prefix and double newline \n\n
+    res.write(
+      `data: ${JSON.stringify({
+        event: "news-update",
+        story: stories[randomIndex],
+      })}\n\n`,
+    );
+  }, 5000);
+
+  req.on("close", () => {
+    clearInterval(intervalId);
+    res.end();
+  });
 }
