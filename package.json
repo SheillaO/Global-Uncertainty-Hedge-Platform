@@ -1,0 +1,21 @@
+{
+  "name": "global-uncertainty-hedge-platform",
+  "version": "1.0.0",
+  "description": "During global uncertainty, strategic commodities become currency. This platform helps everyday people invest in the physical resources that power civilization.",
+  "homepage": "https://github.com/SheillaO/Global-Uncertainty-Hedge-Platform#readme",
+  "bugs": {
+    "url": "https://github.com/SheillaO/Global-Uncertainty-Hedge-Platform/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SheillaO/Global-Uncertainty-Hedge-Platform.git"
+  },
+  "license": "ISC",
+  "author": "Sheilla Olga - Technical Product Marketing Manager",
+  "type": "\"module\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm start",
+    "start": "node server.js"
+  }
+}
