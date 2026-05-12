@@ -1,17 +1,18 @@
-import sanitizehtml from 'sanitizehtml'
+import sanitizehtml from "sanitizehtml";
 
-export function sanitizeInput (data){
-    const sanitizedData = {}
+export function sanitizeInput(data) {
+  const sanitizedData = {};
 
-    for (const [key,value]) of Object.entries(data)){
-
-        if (typeof value ==='string') {
-            sanitizedData[key] = sanitizehtml (value, {
-             allowedTags:[], allowed
-
-            })
-        }
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === "string") {
+      sanitizedData[key] = sanitizehtml(value, {
+        allowedTags: [],
+        allowedAttributes: {},
+      });
+    } else {
+      sanitizedData[key] = value;
     }
+  }
 
-
+  return sanitizedData;
 }
