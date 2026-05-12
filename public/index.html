@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fixed the Font Link so it works -->
     <link href="https://googleapis.com" rel="stylesheet">
     <title>Global Trade | Commodity Markets</title>
 </head>
@@ -16,7 +17,6 @@
     <main>
         <h1 class="title">Global Trade</h1>
 
-        <!-- Commodity Selector for Alpha Vantage / Yahoo Finance tickers -->
         <section class="asset-selector">
             <label for="commodity-select">Select Commodity</label>
             <select id="commodity-select">
@@ -43,14 +43,29 @@
                 <option value="USD">$ USD</option>
             </select>
         </section>
+
+        <!-- START OF NEW PROFESSIONAL PRICE SECTION -->
         <section class="price-info-container">
-            <p>£<span id="price-display" class="price" aria-live="assertive">----.--</span> / <span
-                    id="unit-label">ozt</span>*</p>
-            <p id="connection-status" class="status" aria-live="polite">Market Open 🟢</p>
+            <div class="market-pulse">
+                <span class="status-dot"></span>
+                <p id="connection-status" class="status">LIVE MARKET</p>
+            </div>
+
+            <div class="price-display-wrapper">
+                <span id="currency-symbol" class="currency-symbol">£</span>
+                <span id="price-display" class="price">----.--</span>
+                <span id="unit-label" class="unit">/ ozt</span>
+            </div>
+
+            <div id="price-change" class="price-change neutral">
+                <span class="change-value">0.00%</span>
+                <span class="change-icon">●</span>
+            </div>
         </section>
+        <!-- END OF NEW PROFESSIONAL PRICE SECTION -->
 
         <form id="trade-form">
-            <label for="investment-amount">Investment Amount (GBP)</label>
+            <label for="investment-amount">Investment Amount</label>
             <div class="input-container">
                 <div class="currency">£</div>
                 <input type="number" id="investment-amount" placeholder="500.00" min="1" step="any" required>

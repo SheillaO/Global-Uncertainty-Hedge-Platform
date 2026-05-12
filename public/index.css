@@ -91,15 +91,13 @@ label {
 
 .price-info-container {
     display: flex;
-    flex-direction: column; /* Stacked for better readability */
+    flex-direction: column;
     align-items: center;
-    gap: 0.2em;
-    font-size: 110%;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.2); /* Transparent dark bg */
     border: 2px solid var(--gold);
-    position: relative;
-    border-radius: 10px;
-    padding: 1em;
-    margin-top: 0.5em;
+    border-radius: 12px;
+    margin: 1rem 0;
 }
 
 .status {
@@ -109,6 +107,22 @@ label {
     background-color: var(--brown);
     padding: 0 .4em;
     font-size: 12px;
+}
+
+.status-dot {
+    height: 8px;
+    width: 8px;
+    background-color: #2ecc71; /* Professional Green */
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px #2ecc71;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    70% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 12px #2ecc71; }
+    100% { transform: scale(0.95); opacity: 0.7; }
 }
 
 .price {
@@ -128,6 +142,41 @@ form {
     display: flex;
     align-items: stretch;
 }
+
+.market-pulse {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.price-display-wrapper {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin: 10px 0;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.price-change {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.price-change.neutral { color: #888; } /* Gray */
+.price-change.up { color: #2ecc71; }      /* Green */
+.price-change.down { color: #e74c3c; }    /* Red */
+
+.price:empty::before {
+    content: "0.00";
+    filter: blur(4px);
+    opacity: 0.3;
+}
+
 
 .currency {
     padding: 0.5em;
