@@ -1,13 +1,15 @@
 import EventEmitter from "node:events";
 import nodemailer from "nodemailer";
 import PDFDocument from "pdfkit";
-import fs from "node:fs/promises";
+import fs from "fs";
 
+// CUSTOMER DETAILS
 const customerDetails = {
   fullName: "Olly Olly",
   email: "nairobiolga@gmail.com",
 };
 
+// CREATE EVENT EMITTER
 const marketRequestEmitter = new EventEmitter();
 
 // EMAIL FUNCTION
@@ -22,11 +24,12 @@ async function generateEmail(data) {
     },
   });
 
-  await transporter.sendMail({
-    from: "your@gmail.com",
-    to: customer.email,
-    subject: `${commodity} Market Rates`,
-    text: `
+  try {
+    await transporter.sendMail({
+      from: "your@gmail.com",
+      to: customer.email,
+      subject: `${commodity} Market Rates`,
+      text: `
 Hello ${customer.fullName},
 
 Here is your latest commodity market report.
@@ -37,10 +40,14 @@ Market: ${market}
 Currency: ${currency}
 
 Thank you for using our market alert service.
-    `,
-  });
+      `,
+    });
 
-  console.log("✅ Email sent successfully");
+    console.log("✅ Email sent successfully");
+  } catch (error) {
+    console.log("❌ Email failed");
+    console.error(error);
+  }
 }
 
 // PDF FUNCTION
@@ -49,6 +56,7 @@ function generatePDF(data) {
 
   const doc = new PDFDocument();
 
+  // CREATE PDF FILE
   doc.pipe(fs.createWriteStream(`${commodity.toLowerCase()}-report.pdf`));
 
   // TITLE
@@ -60,11 +68,12 @@ function generatePDF(data) {
 
   // CUSTOMER INFO
   doc.fontSize(16).text(`Customer: ${customer.fullName}`);
+
   doc.text(`Email: ${customer.email}`);
 
   doc.moveDown();
 
-  // MARKET DATA
+  // COMMODITY INFO
   doc.text(`Commodity: ${commodity}`);
   doc.text(`Current Price: ${price}`);
   doc.text(`Market: ${market}`);
@@ -79,6 +88,7 @@ function generatePDF(data) {
       align: "center",
     });
 
+  // FINALIZE PDF
   doc.end();
 
   console.log("✅ PDF generated successfully");
@@ -86,12 +96,13 @@ function generatePDF(data) {
 
 // DATABASE LOG FUNCTION
 function logRequest(data) {
-  console.log("✅ Request saved to database");
+  console.log("✅ Request logged");
 
   console.log({
     customer: data.customer.fullName,
     commodity: data.commodity,
     price: data.price,
+    market: data.market,
     requestedAt: new Date(),
   });
 }
@@ -103,12 +114,16 @@ marketRequestEmitter.on("commodityRequest", generatePDF);
 
 marketRequestEmitter.on("commodityRequest", logRequest);
 
+// DATA OBJECT
+const commodityData = {
+  customer: customerDetails,
+  commodity: "Gold",
+  price: "$3400",
+  market: "COMEX",
+  currency: "USD",
+};
+
+// TRIGGER EVENT AFTER 3 SECONDS
 setTimeout(() => {
-  marketRequestEmitter.emit("commodityRequest", {
-    customer: customerDetails,
-    commodity: "Gold",
-    price: "$3,400",
-    market: "NYSE",
-    currency: "USD",
-  });
+  marketRequestEmitter.emit("commodityRequest", commodityData);
 }, 3000);
