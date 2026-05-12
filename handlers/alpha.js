@@ -4,7 +4,7 @@
  */
 export async function getAlphaPrice(symbol) {
   // Using the API key from your environment variables for security
-  const API_KEY = process.env.ALPHA_VANTAGE_KEY || "3DG5915PZ8Y0JUHW";
+  const API_KEY = process.env.ALPHA_VANTAGE_KEY;
 
   try {
     // 1. Correct Alpha Vantage URL structure for Commodities

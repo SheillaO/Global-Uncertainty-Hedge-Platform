@@ -177,6 +177,48 @@ form {
     opacity: 0.3;
 }
 
+.news-ticker-container {
+    margin-top: 2rem;
+    display: flex;
+    background: #1a1714;
+    border-top: 2px solid var(--gold);
+    overflow: hidden;
+    height: 40px;
+    align-items: center;
+}
+
+.ticker-label {
+    background: var(--gold);
+    color: black;
+    padding: 0 15px;
+    font-weight: bold;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.ticker-window {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.ticker-text {
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
+    margin: 0;
+    line-height: 40px;
+    color: var(--gold);
+    /* This creates the scrolling animation */
+    animation: scroll-news 20s linear infinite;
+}
+
+@keyframes scroll-news {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
 
 .currency {
     padding: 0.5em;

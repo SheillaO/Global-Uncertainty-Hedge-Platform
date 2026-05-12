@@ -12,8 +12,9 @@ const dialog = document.getElementById("summary-dialog");
 const summaryText = document.getElementById("investment-summary");
 const priceChangeCont = document.getElementById("price-change");
 const changeValue = priceChangeCont.querySelector(".change-value");
+const newsDisplay = document.getElementById("news-display");
 
-// 2. State
+// 2. State & Data
 let lastPrice = 0;
 
 const commodityInfo = {
@@ -29,7 +30,7 @@ const commodityInfo = {
   CORN: { unit: "bu", desc: "* 1bu = 1 bushel of Shelled Corn" },
 };
 
-// 3. UI Update Functions
+// 3. Price & UI Functions
 function updatePriceUI(newPrice) {
   const price = parseFloat(newPrice);
   if (isNaN(price)) return;
@@ -62,10 +63,10 @@ function updateStaticUI() {
   currencySymbolMain.textContent = sign;
   currencySymbols.forEach((el) => (el.textContent = sign));
 
-  fetchLivePrice(); // Fetch new price immediately when asset changes
+  fetchLivePrice();
 }
 
-// 4. Live Ticker Logic
+// 4. Live Data Logic (Ticker & News)
 async function fetchLivePrice() {
   try {
     const symbol = commoditySelect.value;
@@ -77,7 +78,24 @@ async function fetchLivePrice() {
   }
 }
 
-// 5. Event Listeners
+function connectNewsFeed() {
+  const eventSource = new EventSource("http://localhost:5500/news");
+
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.event === "news-update") {
+      newsDisplay.textContent = data.story;
+    }
+  };
+
+  eventSource.onerror = () => {
+    newsDisplay.textContent = "Reconnecting to market news...";
+    eventSource.close();
+    setTimeout(connectNewsFeed, 5000);
+  };
+}
+
+// 5. Interaction Listeners
 investBtn.addEventListener("click", async (e) => {
   e.preventDefault();
   const amount = amountInput.value;
@@ -99,7 +117,7 @@ investBtn.addEventListener("click", async (e) => {
     const result = await response.json();
     if (response.ok) {
       updatePriceUI(result.data.price);
-      summaryText.textContent = `Success! Invested ${currencySelect.value} ${amount} in ${commoditySelect.value}.`;
+      summaryText.textContent = `Success! You invested ${currencySelect.value} ${amount} in ${commoditySelect.value}.`;
       dialog.showModal();
     }
   } catch (err) {
@@ -113,6 +131,7 @@ investBtn.addEventListener("click", async (e) => {
 commoditySelect.addEventListener("change", updateStaticUI);
 currencySelect.addEventListener("change", updateStaticUI);
 
-// 6. Start
+// 6. Initialization
 updateStaticUI();
-setInterval(fetchLivePrice, 30000); // Update price every 30 seconds
+connectNewsFeed();
+setInterval(fetchLivePrice, 30000); // 30s Ticker Update
