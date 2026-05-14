@@ -3,7 +3,7 @@ const API_BASE_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
     ? "http://localhost:5500"
-    : "onrender.com";
+    : "https://global-uncertainty-hedge-platform.onrender.com";
 
 // 1. Elements
 const commoditySelect = document.getElementById("commodity-select");
