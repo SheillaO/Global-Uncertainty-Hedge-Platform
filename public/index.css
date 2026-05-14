@@ -387,74 +387,98 @@ dialog button:active {
 /* ==========================================
    7. Advanced Customized Print Receipts Styles
    ========================================== */
+/* ==========================================
+   7. Advanced Customized Print Receipts Styles
+   ========================================== */
 @media print {
-    body {
+    /* 1. Force the hidden body elements back into view */
+    html, body {
+        visibility: visible !important;
         background: #ffffff !important;
         color: #000000 !important;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        width: 100% !important;
+        height: auto !important;
     }
 
+    /* 2. Hide all main trading containers, buttons, and decorative elements completely */
     main, 
     .news-ticker-container, 
     dialog button, 
     .modal-print-btn,
-    .footnote {
+    .footnote,
+    .modal-success-icon {
         display: none !important;
+        visibility: hidden !important;
     }
 
+    /* 3. Pull the dialog modal contents out of the hidden overlay layer into the main print area */
     dialog {
         display: block !important;
-        position: relative !important;
+        visibility: visible !important;
+        position: absolute !important;
         top: 0 !important;
         left: 0 !important;
         transform: none !important;
         width: 100% !important;
         max-width: 100% !important;
         background: #ffffff !important;
-        background-image: none !important;
-        border: none !important;
         color: #000000 !important;
         box-shadow: none !important;
+        border: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
 
+    /* Ensure the target description text displays cleanly */
+    #investment-summary {
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    /* 4. Format the trade title header on paper */
     #dialog-title {
+        display: block !important;
+        visibility: visible !important;
         color: #000000 !important;
         border-bottom: 2px solid #000000 !important;
         font-size: 20pt !important;
         text-align: left !important;
         padding-bottom: 10px !important;
         margin-bottom: 20px !important;
+        text-transform: uppercase;
     }
 
-    .modal-success-icon {
-        display: none !important; 
-    }
-
+    /* 5. Structure the text fields to look like clean invoice line items */
     #investment-summary p {
+        display: block !important;
+        visibility: visible !important;
         font-size: 12pt !important;
         color: #000000 !important;
         margin: 12px 0 !important;
         line-height: 1.5 !important;
         border-bottom: 1px dashed #cccccc !important;
         padding-bottom: 6px !important;
+        text-align: left !important;
     }
 
     #investment-summary p strong {
         display: inline-block !important;
-        width: 220px !important;
+        width: 200px !important;
         color: #333333 !important;
     }
 
+    /* 6. Render an official verification signature block at the bottom of the printed page */
     #investment-summary::after {
         content: "\0A\0A\0A Verified by Global Trade Clearing Desk\0A Date Issued: " attr(data-date) "\0A Transaction Secure Guarantee Node";
         display: block !important;
+        visibility: visible !important;
         white-space: pre-wrap !important;
         font-size: 10pt !important;
-        color: #666666 !important;
+        color: #555555 !important;
         border-top: 1px solid #000000 !important;
         margin-top: 40px !important;
         padding-top: 15px !important;
+        text-align: left !important;
     }
 }
