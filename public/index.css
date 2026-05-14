@@ -468,3 +468,26 @@ dialog button:active {
     100% { transform: translateY(0px); }
 }
 
+/* ==========================================
+   8. Portfolio Attribution Footer Links Styles
+   ========================================== */
+.portfolio-footer-links {
+    font-size: 11px;
+    text-align: center;
+    color: var(--gold);
+    margin-top: 1.5rem;
+    opacity: 0.8;
+    letter-spacing: 0.05em;
+}
+
+.portfolio-footer-links a {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px dashed var(--gold);
+    transition: color 0.2s ease;
+}
+
+.portfolio-footer-links a:hover {
+    color: var(--gold);
+}
+
