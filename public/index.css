@@ -5,20 +5,24 @@
     --brown: #2b2724;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--bg);
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Poppins', sans-serif; /* Updated to match your HTML's imported Google Font */
     letter-spacing: .04em;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* Changed to min-height for better mobile scrolling */
+    min-height: 100vh; 
     margin: 0;
     color: var(--gold);
 }
 
 main {
-    padding: 2em 2em 1em 2em;
+    padding: 2em;
     background-color: var(--brown);
     background-image: linear-gradient(180deg, var(--brown) 60%, var(--dark-gold));
     border-radius: 10px;
@@ -27,43 +31,43 @@ main {
     flex-direction: column;
     gap: 1em;
     width: 100%;
-    max-width: 350px; /* Keeps the app contained */
+    max-width: 350px; 
 }
 
 .title {
     margin: 0 0 0.25em 0;
     text-align: center;
-    font-family: "Saira Stencil One", serif;
+    font-weight: 700;
     letter-spacing: 1.3px;
-    font-size: 2.5em;
+    font-size: 2.2em;
     background-image: linear-gradient(45deg, var(--gold), var(--dark-gold));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* NEW: Styles for the Dropdown Containers */
+/* Dropdown Containers */
 .asset-selector, .settings {
     position: relative;
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
     margin-bottom: 0.5em;
 }
 
-/* NEW: Consistent styling for the Dropdowns */
+/* Consistent styling for the Dropdowns */
 select {
     padding: 1em;
     background-color: transparent;
     color: var(--gold);
     border: 2px solid var(--gold);
     border-radius: 10px;
-    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     cursor: pointer;
-    appearance: none; /* Removes default arrow */
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='gold'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    appearance: none; 
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='w3.org' viewBox='0 0 24 24' fill='gold'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 10px center;
+    background-position: right 15px center;
     background-size: 20px;
 }
 
@@ -71,48 +75,56 @@ select:focus {
     outline: 2px solid #fff;
 }
 
-/* Style for the options inside the dropdown */
 option, optgroup {
     background-color: var(--brown);
     color: var(--gold);
 }
 
-/* Keeps your unique Label look */
 label {
     position: absolute;
-    font-size: 12px;
+    font-size: 11px;
     top: -9px;
     left: 15px;
     z-index: 1;
     background-color: var(--brown);
     padding: 0 .4em;
     color: var(--gold);
+    font-weight: 600;
 }
 
+/* Live Price Widget Container */
 .price-info-container {
+    position: relative; /* Fixed: Required so that the absolute status text targets this box */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.2); /* Transparent dark bg */
+    background: rgba(0, 0, 0, 0.3); 
     border: 2px solid var(--gold);
     border-radius: 12px;
     margin: 1rem 0;
 }
 
-.status {
+.market-pulse {
     position: absolute;
-    top: -12px;
+    top: -11px;
     left: 20px;
     background-color: var(--brown);
-    padding: 0 .4em;
-    font-size: 12px;
+    padding: 0 .5em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status {
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .status-dot {
     height: 8px;
     width: 8px;
-    background-color: #2ecc71; /* Professional Green */
+    background-color: #2ecc71; 
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0 0 8px #2ecc71;
@@ -125,38 +137,25 @@ label {
     100% { transform: scale(0.95); opacity: 0.7; }
 }
 
-.price {
-    font-size: 1.8em;
-    font-weight: bold;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    gap: 1.5em;
-    margin-top: 0.5em;
-}
-
-.input-container {
-    display: flex;
-    align-items: stretch;
-}
-
-.market-pulse {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
 .price-display-wrapper {
     font-size: 2.2rem;
     font-weight: 700;
     color: var(--gold);
-    margin: 10px 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
     display: flex;
     align-items: baseline;
     gap: 4px;
+}
+
+.price {
+    font-weight: bold;
+}
+
+.unit {
+    font-size: 14px;
+    color: var(--gold);
+    opacity: 0.7;
 }
 
 .price-change {
@@ -167,21 +166,122 @@ form {
     gap: 4px;
 }
 
-.price-change.neutral { color: #888; } /* Gray */
-.price-change.up { color: #2ecc71; }      /* Green */
-.price-change.down { color: #e74c3c; }    /* Red */
+/* Fixed: Linked to JS runtime active status toggles */
+.price-change.neutral { color: #888; } 
+.price-change.positive { color: #2ecc71; }      
+.price-change.negative { color: #e74c3c; }    
 
-.price:empty::before {
-    content: "0.00";
-    filter: blur(4px);
-    opacity: 0.3;
+/* Order Handling Layout */
+#trade-form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 1.2em;
+    margin-top: 0.5em;
 }
 
+.input-container {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+}
+
+.currency {
+    padding: 0 0.5em;
+    border: 2px solid var(--gold);
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+}
+
+input[type="number"] {
+    padding: 1em;
+    width: 100%;
+    border: 2px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    background-color: transparent;
+    color: var(--gold);
+    font-size: 1.1em;
+    outline: none;
+}
+
+.invest-btn {
+    padding: .5em;
+    background-image: linear-gradient(45deg, var(--gold) 50%, var(--dark-gold));
+    font-weight: bold;
+    font-size: 1.3em;
+    color: var(--brown);
+    border-radius: 10px;
+    border: 2px solid var(--dark-gold);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.invest-btn:active {
+    transform: scale(0.98);
+}
+
+.invest-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.footnote {
+    font-size: 10px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.2);
+    padding: .6em;
+    border-radius: 10px;
+    color: var(--gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Modals */
+dialog {
+    max-width: 280px;
+    border-radius: 10px;
+    border: 2px solid var(--dark-gold);
+    background-color: var(--brown);
+    color: var(--gold);
+    padding: 1.5em;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+dialog h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--gold);
+}
+
+dialog p {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+dialog button {
+    background-color: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* News Ticker Container */
 .news-ticker-container {
-    margin-top: 2rem;
+    margin-top: 1rem;
     display: flex;
     background: #1a1714;
-    border-top: 2px solid var(--gold);
+    border: 2px solid var(--gold); /* Border wrapped fully for consistent clean alignment */
+    border-radius: 6px;
     overflow: hidden;
     height: 40px;
     align-items: center;
@@ -196,88 +296,27 @@ form {
     display: flex;
     align-items: center;
     white-space: nowrap;
+    z-index: 2;
 }
 
 .ticker-window {
     flex: 1;
     overflow: hidden;
     position: relative;
+    height: 100%;
 }
 
 .ticker-text {
     position: absolute;
     white-space: nowrap;
-    width: 100%;
     margin: 0;
-    line-height: 40px;
+    line-height: 36px; /* Offset alignment for precise vertical centering */
     color: var(--gold);
-    /* This creates the scrolling animation */
-    animation: scroll-news 20s linear infinite;
+    animation: scroll-news 15s linear infinite;
+    padding-left: 100%; /* Push text initial state back to avoid overlapping the label */
 }
 
 @keyframes scroll-news {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-.currency {
-    padding: 0.5em;
-    border: 2px solid var(--gold);
-    border-right: none;
-    border-radius: 10px 0 0 10px;
-    font-size: 1.8em;
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 215, 0, 0.1);
-}
-
-input {
-    padding: 1em;
-    width: 100%;
-    border: 2px solid var(--gold);
-    border-radius: 0 10px 10px 0;
-    background-color: transparent;
-    color: var(--gold);
-    font-size: 1.2em;
-    outline: none;
-}
-
-.invest-btn {
-    padding: .6em .5em;
-    background-image: linear-gradient(45deg, var(--gold) 50%, var(--dark-gold));
-    font-weight: bold;
-    font-size: 1.5em;
-    color: var(--brown);
-    border-radius: 10px;
-    border: 2px solid var(--dark-gold);
-    cursor: pointer;
-    transition: transform 0.1s ease;
-}
-
-.invest-btn:active {
-    transform: scale(0.98);
-}
-
-.footnote {
-    font-size: 10px;
-    text-align: center;
-    background-color: rgba(0,0,0,0.2);
-    padding: .6em;
-    border-radius: 10px;
-    color: var(--gold);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-/* Dialog Styles */
-dialog {
-    max-width: 280px;
-    border-radius: 10px;
-    border: 2px solid var(--dark-gold);
-    background-color: var(--brown);
-    color: var(--gold);
-    padding: 1.5em;
-}
-
-dialog::backdrop {
-    background: rgba(0, 0, 0, 0.8);
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
 }

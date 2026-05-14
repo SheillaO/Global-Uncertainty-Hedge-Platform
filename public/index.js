@@ -7,27 +7,34 @@ const footnoteDisplay = document.getElementById("footnote-display");
 const currencySymbols = document.querySelectorAll(".currency");
 const currencySymbolMain = document.getElementById("currency-symbol");
 const amountInput = document.getElementById("investment-amount");
+// FIX: The form submits, so grabbing the form directly helps control execution cleanly
+const tradeForm = document.getElementById("trade-form");
 const investBtn = document.getElementById("invest-btn");
 const dialog = document.getElementById("summary-dialog");
 const summaryText = document.getElementById("investment-summary");
 const priceChangeCont = document.getElementById("price-change");
 const changeValue = priceChangeCont.querySelector(".change-value");
+// FIX: Added reference to change icon span to handle your HTML's custom dot/icon structure
+const changeIcon = priceChangeCont.querySelector(".change-icon");
 const newsDisplay = document.getElementById("news-display");
 
 // 2. State & Data
 let lastPrice = 0;
 
 const commodityInfo = {
-  WTI: { unit: "bbl", desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil" },
+  WTI: {
+    unit: "/ bbl",
+    desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil",
+  },
   NATURAL_GAS: {
-    unit: "MMBtu",
+    unit: "/ MMBtu",
     desc: "* 1 MMBtu = 1 million British Thermal Units",
   },
-  GOLD: { unit: "ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
-  SILVER: { unit: "ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
-  COPPER: { unit: "lb", desc: "* 1lb = 1 pound of Grade A Copper" },
-  WHEAT: { unit: "bu", desc: "* 1bu = 1 bushel of Hard Red Winter Wheat" },
-  CORN: { unit: "bu", desc: "* 1bu = 1 bushel of Shelled Corn" },
+  GOLD: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
+  SILVER: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
+  COPPER: { unit: "/ lb", desc: "* 1lb = 1 pound of Grade A Copper" },
+  WHEAT: { unit: "/ bu", desc: "* 1bu = 1 bushel of Hard Red Winter Wheat" },
+  CORN: { unit: "/ bu", desc: "* 1bu = 1 bushel of Shelled Corn" },
 };
 
 // 3. Price & UI Functions
@@ -36,18 +43,22 @@ function updatePriceUI(newPrice) {
   if (isNaN(price)) return;
 
   if (lastPrice !== 0) {
-    priceChangeCont.classList.remove("up", "down", "neutral");
+    // FIX: Class names updated to "positive", "negative", and "neutral" to match standard styling naming patterns
+    priceChangeCont.classList.remove("positive", "negative", "neutral");
     const diff = ((price - lastPrice) / lastPrice) * 100;
 
     if (price > lastPrice) {
-      priceChangeCont.classList.add("up");
-      changeValue.textContent = `▲ +${diff.toFixed(2)}%`;
+      priceChangeCont.classList.add("positive");
+      changeValue.textContent = `+${diff.toFixed(2)}%`;
+      changeIcon.textContent = "▲";
     } else if (price < lastPrice) {
-      priceChangeCont.classList.add("down");
-      changeValue.textContent = `▼ ${diff.toFixed(2)}%`;
+      priceChangeCont.classList.add("negative");
+      changeValue.textContent = `${diff.toFixed(2)}%`;
+      changeIcon.textContent = "▼";
     } else {
       priceChangeCont.classList.add("neutral");
-      changeValue.textContent = "● 0.00%";
+      changeValue.textContent = "0.00%";
+      changeIcon.textContent = "●";
     }
   }
   priceDisplay.textContent = price.toFixed(2);
@@ -96,7 +107,8 @@ function connectNewsFeed() {
 }
 
 // 5. Interaction Listeners
-investBtn.addEventListener("click", async (e) => {
+// FIX: Attached listener to form submit rather than button click to stop native page reload issues
+tradeForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const amount = amountInput.value;
   if (!amount || amount <= 0) return alert("Enter a valid amount");
