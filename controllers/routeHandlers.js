@@ -1,4 +1,4 @@
-import { getYahooPrice } from "./yahoo.js";
+import { getAlphaPrice } from "./alpha.js";
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";

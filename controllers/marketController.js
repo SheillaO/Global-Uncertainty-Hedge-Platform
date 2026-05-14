@@ -1,12 +1,11 @@
-import { getYahooPrice } from "./yahoo.js";
+import { getAlphaPrice } from "./alpha.js";
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
-import { getData } from "../utils/getData.js"; // FIXED: Added missing import to prevent history crash
+import { getData } from "../utils/getData.js";
 import { sanitizeInput } from "../utils/sanitizeInput.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
 import { stories } from "../data/stories.js";
-
 // 1. GET: Fetch complete local trade history from data.json
 export async function handleGet(res) {
   try {
