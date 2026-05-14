@@ -1,12 +1,8 @@
 import yahooFinance from "yahoo-finance2";
 
-// FIX: Force the yahoo library to bypass validation cookie blocks inside headless cloud containers
+// Suppress library validation exception blocks during live production execution
 yahooFinance.setGlobalConfig({ validation: { logErrors: false } });
 
-/**
- * Fetches live quotes from Yahoo Finance
- * @param {string} commodity - The UI name (e.g., "GOLD")
- */
 export async function getYahooPrice(commodity) {
   const tickerMap = {
     GOLD: "GC=F",
@@ -17,28 +13,37 @@ export async function getYahooPrice(commodity) {
   const ticker = tickerMap[commodity];
 
   if (!ticker) {
-    throw new Error(`Ticker not found for commodity: ${commodity}`);
+    throw new Error(`Invalid Yahoo commodity token requested: ${commodity}`);
   }
 
   try {
-    // Force call quote summary to clean out edge session failures
     const result = await yahooFinance.quote(ticker);
 
-    if (!result || !result.regularMarketPrice) {
+    // Safety fallback block if third-party metrics return empty objects
+    if (!result) {
       throw new Error(
-        `Yahoo Finance returned empty data structures for ${ticker}`,
+        `Yahoo Finance empty response payload returned for target ticker ${ticker}`,
+      );
+    }
+
+    const resolvedPrice =
+      result.regularMarketPrice ||
+      result.preMarketPrice ||
+      result.postMarketPrice;
+
+    if (resolvedPrice === undefined || resolvedPrice === null) {
+      throw new Error(
+        `Unable to extract regularMarketPrice metrics for ${ticker}`,
       );
     }
 
     return {
-      price: parseFloat(result.regularMarketPrice),
-      market: result.fullExchangeName || "Yahoo Finance",
+      price: parseFloat(resolvedPrice),
+      market: result.fullExchangeName || "Yahoo Finance Market Feed",
       currency: result.currency || "USD",
     };
   } catch (error) {
-    console.error("Yahoo Finance API Error Context:", error.message);
-    throw new Error(
-      `Failed to fetch data from Yahoo Finance: ${error.message}`,
-    );
+    console.error("Yahoo API Subsystem Fault:", error.message);
+    throw new Error(`Subsystem Execution Failure: ${error.message}`);
   }
 }

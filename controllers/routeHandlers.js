@@ -14,13 +14,22 @@ async function fetchPrice(commodity) {
   }
 }
 
-// 1. GET: The Live Ticker
+// 1. GET: The Live Ticker (With Strict Runtime Type Validation)
 export async function handleGetPrice(res, symbol) {
   try {
-    const data = await fetchPrice(symbol);
+    // FIX: Safety check to prevent array-to-string type exceptions inside upstream tickers
+    if (typeof symbol !== "string") {
+      throw new Error(
+        `Invalid symbol data structure passed: ${JSON.stringify(symbol)}`,
+      );
+    }
+
+    const cleanSymbol = symbol.trim().toUpperCase();
+    const data = await fetchPrice(cleanSymbol);
+
     sendResponse(res, 200, "application/json", JSON.stringify(data));
   } catch (err) {
-    console.error("Ticker Error:", err.message);
+    console.error("Ticker Exception Triggered:", err.message);
     sendResponse(
       res,
       500,
@@ -30,7 +39,7 @@ export async function handleGetPrice(res, symbol) {
   }
 }
 
-// 2. POST: The "Invest Now" button
+// 2. POST: The "Invest Now" Button Handler
 export async function handlePost(res, req) {
   try {
     const body = await parseJSONBody(req);
@@ -43,7 +52,7 @@ export async function handlePost(res, req) {
       commodity,
       price: liveData.price,
       currency,
-      amount: parseFloat(amount), // FIX: Force number formatting on incoming payload data values
+      amount: parseFloat(amount), // FIX: Enforce number safety parsing on numeric payloads
       market: liveData.market || "Global Market",
     };
 
@@ -67,7 +76,7 @@ export async function handlePost(res, req) {
   }
 }
 
-// 3. GET: The Live News Stream (SSE)
+// 3. GET: The Live News Stream (SSE Engine)
 export async function handleNews(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
@@ -85,7 +94,7 @@ export async function handleNews(req, res) {
     );
   }, 5000);
 
-  // FIX: Added missing block syntax closing characters to resolve runtime crash
+  // Clean up server-side reference pools when a user disconnects
   req.on("close", () => {
     clearInterval(intervalId);
     res.end();
