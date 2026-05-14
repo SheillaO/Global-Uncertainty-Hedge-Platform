@@ -1,3 +1,6 @@
+/* ==========================================
+   1. Core Reset & Variable Configurations
+   ========================================== */
 :root {
     --bg: black;
     --gold: gold;
@@ -7,11 +10,13 @@
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     background-color: var(--bg);
-    font-family: 'Poppins', sans-serif; /* Updated to match your HTML's imported Google Font */
+    font-family: 'Poppins', sans-serif; 
     letter-spacing: .04em;
     display: flex;
     align-items: center;
@@ -46,7 +51,9 @@ main {
     -webkit-text-fill-color: transparent;
 }
 
-/* Dropdown Containers */
+/* ==========================================
+   2. Input Dropdowns & Labels
+   ========================================== */
 .asset-selector, .settings {
     position: relative;
     display: flex;
@@ -55,7 +62,6 @@ main {
     margin-bottom: 0.5em;
 }
 
-/* Consistent styling for the Dropdowns */
 select {
     padding: 1em;
     background-color: transparent;
@@ -92,9 +98,11 @@ label {
     font-weight: 600;
 }
 
-/* Live Price Widget Container */
+/* ==========================================
+   3. Live Metrics Display Container
+   ========================================== */
 .price-info-container {
-    position: relative; /* Fixed: Required so that the absolute status text targets this box */
+    position: relative; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -166,12 +174,13 @@ label {
     gap: 4px;
 }
 
-/* Fixed: Linked to JS runtime active status toggles */
 .price-change.neutral { color: #888; } 
 .price-change.positive { color: #2ecc71; }      
 .price-change.negative { color: #e74c3c; }    
 
-/* Order Handling Layout */
+/* ==========================================
+   4. Trading Input Form Buttons
+   ========================================== */
 #trade-form {
     display: flex;
     flex-direction: column;
@@ -240,47 +249,81 @@ input[type="number"] {
     border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-/* Modals */
+/* ==========================================
+   5. Dialog Modals Layout (Beautified & Merged)
+   ========================================== */
 dialog {
-    max-width: 280px;
-    border-radius: 10px;
+    max-width: 320px;
+    width: 90%;
+    border-radius: 12px;
     border: 2px solid var(--dark-gold);
     background-color: var(--brown);
+    background-image: linear-gradient(180deg, var(--brown) 70%, #1a1714);
     color: var(--gold);
-    padding: 1.5em;
+    padding: 2em;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+    text-align: center;
 }
 
 dialog::backdrop {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
 }
 
-dialog h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: var(--gold);
-}
-
-dialog p {
-    font-size: 14px;
-    line-height: 1.4;
+#dialog-title {
+    font-size: 1.4em;
+    font-weight: 700;
     margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 8px;
+}
+
+#investment-summary p {
+    font-size: 13px;
+    margin: 8px 0;
+    text-align: left;
+    color: #f1e4c3;
+}
+
+.modal-success-icon {
+    font-size: 2.5em;
+    color: #2ecc71;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
 }
 
 dialog button {
-    background-color: transparent;
-    border: 2px solid var(--gold);
-    color: var(--gold);
-    padding: 4px 12px;
+    margin-top: 15px;
+    width: 100%;
+    background: linear-gradient(45deg, var(--gold) 50%, var(--dark-gold));
+    border: 1px solid var(--dark-gold);
+    color: var(--brown);
+    padding: 0.6em;
     border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
+    transition: transform 0.1s ease;
 }
 
-/* News Ticker Container */
+dialog button:hover {
+    filter: brightness(1.1);
+}
+
+dialog button:active {
+    transform: scale(0.97);
+}
+
+/* ==========================================
+   6. News Ticker Stream Layout
+   ========================================== */
 .news-ticker-container {
     margin-top: 1rem;
     display: flex;
     background: #1a1714;
-    border: 2px solid var(--gold); /* Border wrapped fully for consistent clean alignment */
+    border: 2px solid var(--gold); 
     border-radius: 6px;
     overflow: hidden;
     height: 40px;
@@ -310,13 +353,14 @@ dialog button {
     position: absolute;
     white-space: nowrap;
     margin: 0;
-    line-height: 36px; /* Offset alignment for precise vertical centering */
+    line-height: 36px; 
     color: var(--gold);
     animation: scroll-news 15s linear infinite;
-    padding-left: 100%; /* Push text initial state back to avoid overlapping the label */
+    padding-left: 100%; 
 }
 
 @keyframes scroll-news {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
 }
+
