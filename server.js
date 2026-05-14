@@ -24,10 +24,11 @@ const server = http.createServer((req, res) => {
   }
 
   // --- API Routes Execution ---
- if (req.method === "GET" && req.url.startsWith("/price/")) {
-   const symbol = req.url.split("/")[2]; // ✅ FIXED: Captures the raw string text ("COPPER")
-   return handleGetPrice(res, symbol);
- }
+  if (req.method === "GET" && req.url.startsWith("/price/")) {
+    // FIX: Add [2] to catch the actual string ("GOLD", "WTI") instead of the whole array!
+    const symbol = req.url.split("/")[2];
+    return handleGetPrice(res, symbol);
+  }
 
 
   if (req.method === "POST" && req.url === "/trade") {
