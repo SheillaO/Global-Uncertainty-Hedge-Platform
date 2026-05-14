@@ -24,6 +24,7 @@ export async function getAlphaPrice(symbol) {
     // FIX: Replaced broken string interpolation with fully qualified Alpha Vantage URL string parameters
     const url = `alphavantage.co{functionName}&interval=monthly&apikey=${API_KEY}`;
 
+
     const response = await fetch(url);
     const json = await response.json();
 
