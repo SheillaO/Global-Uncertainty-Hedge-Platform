@@ -250,15 +250,13 @@ input[type="number"] {
 }
 
 /* ==========================================
-   5. Dialog Modals Layout (Beautified & Merged)
+   5. Dialog Modals Layout (Centered)
    ========================================== */
 dialog {
-    /* FIX: Standard fixed modal position center mapping */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
     max-width: 320px;
     width: 90%;
     border-radius: 12px;
@@ -269,9 +267,8 @@ dialog {
     padding: 2em;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
     text-align: center;
-    margin: 0; /* Prevents default browser margins from overriding the absolute centering */
+    margin: 0; 
 }
-
 
 dialog::backdrop {
     background: rgba(0, 0, 0, 0.85);
@@ -324,6 +321,21 @@ dialog button:active {
     transform: scale(0.97);
 }
 
+/* Styled Internal Dashboard Printing Utility Link */
+.modal-print-btn {
+    background: transparent !important;
+    border: 2px solid var(--gold) !important;
+    color: var(--gold) !important;
+    margin-top: 5px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease;
+}
+
+.modal-print-btn:hover {
+    background: rgba(255, 215, 0, 0.1) !important;
+    color: #fff !important;
+}
+
 /* ==========================================
    6. News Ticker Stream Layout
    ========================================== */
@@ -371,18 +383,78 @@ dialog button:active {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
 }
-/* Styled Internal Dashboard Printing Utility Link */
-.modal-print-btn {
-    background: transparent !important;
-    border: 2px solid var(--gold) !important;
-    color: var(--gold) !important;
-    margin-top: 5px !important;
-    font-size: 0.9rem !important;
-    transition: all 0.2s ease;
-}
 
-.modal-print-btn:hover {
-    background: rgba(255, 215, 0, 0.1) !important;
-    color: #fff !important;
-}
+/* ==========================================
+   7. Advanced Customized Print Receipts Styles
+   ========================================== */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
 
+    main, 
+    .news-ticker-container, 
+    dialog button, 
+    .modal-print-btn,
+    .footnote {
+        display: none !important;
+    }
+
+    dialog {
+        display: block !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        background: #ffffff !important;
+        background-image: none !important;
+        border: none !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #dialog-title {
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+        font-size: 20pt !important;
+        text-align: left !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .modal-success-icon {
+        display: none !important; 
+    }
+
+    #investment-summary p {
+        font-size: 12pt !important;
+        color: #000000 !important;
+        margin: 12px 0 !important;
+        line-height: 1.5 !important;
+        border-bottom: 1px dashed #cccccc !important;
+        padding-bottom: 6px !important;
+    }
+
+    #investment-summary p strong {
+        display: inline-block !important;
+        width: 220px !important;
+        color: #333333 !important;
+    }
+
+    #investment-summary::after {
+        content: "\0A\0A\0A Verified by Global Trade Clearing Desk\0A Date Issued: " attr(data-date) "\0A Transaction Secure Guarantee Node";
+        display: block !important;
+        white-space: pre-wrap !important;
+        font-size: 10pt !important;
+        color: #666666 !important;
+        border-top: 1px solid #000000 !important;
+        margin-top: 40px !important;
+        padding-top: 15px !important;
+    }
+}

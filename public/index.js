@@ -5,8 +5,6 @@ const API_BASE_URL =
     ? "http://localhost:5500"
     : "https://global-uncertainty-hedge-platform.onrender.com";
 
-
-
 // 1. Elements
 const commoditySelect = document.getElementById("commodity-select");
 const currencySelect = document.getElementById("currency-select");
@@ -16,7 +14,6 @@ const footnoteDisplay = document.getElementById("footnote-display");
 const currencySymbols = document.querySelectorAll(".currency");
 const currencySymbolMain = document.getElementById("currency-symbol");
 const amountInput = document.getElementById("investment-amount");
-// INTEGRATED: Multi-user input field caching handles
 const investorNameInput = document.getElementById("investor-name");
 const investorEmailInput = document.getElementById("investor-email");
 const tradeForm = document.getElementById("trade-form");
@@ -32,8 +29,14 @@ const newsDisplay = document.getElementById("news-display");
 let lastPrice = 0;
 
 const commodityInfo = {
-  WTI: { unit: "/ bbl", desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil" },
-  NATURAL_GAS: { unit: "/ MMBtu", desc: "* 1 MMBtu = 1 million British Thermal Units" },
+  WTI: {
+    unit: "/ bbl",
+    desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil",
+  },
+  NATURAL_GAS: {
+    unit: "/ MMBtu",
+    desc: "* 1 MMBtu = 1 million British Thermal Units",
+  },
   GOLD: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
   SILVER: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
   COPPER: { unit: "/ lb", desc: "* 1lb = 1 pound of Grade A Copper" },
@@ -121,14 +124,13 @@ tradeForm.addEventListener("submit", async (e) => {
   const amount = amountInput.value;
   const fullName = investorNameInput.value;
   const email = investorEmailInput.value;
-  
+
   if (!amount || amount <= 0) return alert("Enter a valid amount");
 
   investBtn.textContent = "Processing...";
   investBtn.disabled = true;
 
   try {
-    // INTEGRATED: Full network payload parameters targeting dynamic multi-user data capture
     const response = await fetch(`${API_BASE_URL}/trade`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -136,18 +138,18 @@ tradeForm.addEventListener("submit", async (e) => {
         commodity: commoditySelect.value,
         currency: currencySelect.value,
         amount: amount,
-        fullName: fullName, 
-        email: email        
+        fullName: fullName,
+        email: email,
       }),
     });
-    
+
     const result = await response.json();
-    
+
     if (response.ok) {
       updatePriceUI(result.data.price);
-      
+
       const cleanUnitLabel = unitLabel.textContent.replace("/", "").trim();
-      
+
       summaryText.innerHTML = `
         <div class="modal-success-icon">✓</div>
         <p><strong>Investment Capital:</strong> ${currencySelect.value} ${parseFloat(amount).toFixed(2)}</p>
@@ -161,11 +163,17 @@ tradeForm.addEventListener("submit", async (e) => {
           🖨️ Print Dashboard Receipt
         </button>
       `;
-      
+
       dialog.showModal();
-      tradeForm.reset(); 
+
+      // INTEGRATED: Stamps element with real-time execution dates for the print parser engine
+      summaryText.setAttribute("data-date", new Date().toLocaleString());
+
+      tradeForm.reset();
     } else {
-      alert(`Execution Denied: ${result.error || "Unknown server response code"}`);
+      alert(
+        `Execution Denied: ${result.error || "Unknown server response code"}`,
+      );
     }
   } catch (err) {
     console.error("Network interface error:", err);
