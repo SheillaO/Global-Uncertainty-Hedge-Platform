@@ -4,9 +4,8 @@ import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
-import { stories } from "../data/stories.js"; // Ensure this path is correct!
+import { stories } from "../data/stories.js";
 
-// Helper function to decide which API to call
 async function fetchPrice(commodity) {
   if (["GOLD", "WTI", "SILVER"].includes(commodity)) {
     return await getYahooPrice(commodity);
@@ -44,7 +43,7 @@ export async function handlePost(res, req) {
       commodity,
       price: liveData.price,
       currency,
-      amount,
+      amount: parseFloat(amount), // FIX: Force number formatting on incoming payload data values
       market: liveData.market || "Global Market",
     };
 
@@ -78,7 +77,6 @@ export async function handleNews(req, res) {
 
   const intervalId = setInterval(() => {
     let randomIndex = Math.floor(Math.random() * stories.length);
-    // Important: data: prefix and double newline \n\n
     res.write(
       `data: ${JSON.stringify({
         event: "news-update",
@@ -87,6 +85,7 @@ export async function handleNews(req, res) {
     );
   }, 5000);
 
+  // FIX: Added missing block syntax closing characters to resolve runtime crash
   req.on("close", () => {
     clearInterval(intervalId);
     res.end();

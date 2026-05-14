@@ -5,7 +5,6 @@ import yahooFinance from "yahoo-finance2";
  * @param {string} commodity - The UI name (e.g., "GOLD")
  */
 export async function getYahooPrice(commodity) {
-  // 1. Map the UI name to the Yahoo Finance ticker symbol
   const tickerMap = {
     GOLD: "GC=F",
     WTI: "CL=F",
@@ -19,12 +18,11 @@ export async function getYahooPrice(commodity) {
   }
 
   try {
-    // 2. Fetch the quote from Yahoo Finance
     const result = await yahooFinance.quote(ticker);
 
-    // 3. Return a clean object for our route handler to use
+    // FIX: Enforced strict parsing float safety bounds on regularMarketPrice responses
     return {
-      price: result.regularMarketPrice,
+      price: parseFloat(result.regularMarketPrice),
       market: result.fullExchangeName || "Yahoo Finance",
       currency: result.currency,
     };

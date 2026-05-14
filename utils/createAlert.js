@@ -1,7 +1,10 @@
-export function createAlert(commodity) {
+export function createAlert(tradeData) {
+  // Patched property pointers to match your live tradeData properties
   console.log(
-    `🚨 ALERT: ${commodity.severity.toUpperCase()} bug reported in ${commodity.location}`,
+    `🚨 TRANSACTION ALERT: Large Order Execution Processing in the ${tradeData.market || "Global Market"}`,
   );
-  console.log(`📋 Title: ${commodity.title}`);
-  console.log(`👤 Assigned to: ${commodity.assignedTo || "Unassigned"}`);
+  console.log(`📋 Commodity: ${tradeData.commodity}`);
+  console.log(
+    `💰 Capital Volume: ${tradeData.currency || "USD"} ${tradeData.amount}`,
+  );
 }

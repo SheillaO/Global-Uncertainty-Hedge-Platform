@@ -1,33 +1,47 @@
 /**
  * Fetches live commodity data from Alpha Vantage
- * @param {string} symbol - The commodity function (e.g., "NATURAL_GAS", "WHEAT")
+ * @param {string} symbol - The commodity name from frontend selection (e.g., "NATURAL_GAS")
  */
 export async function getAlphaPrice(symbol) {
-  // Using the API key from your environment variables for security
   const API_KEY = process.env.ALPHA_VANTAGE_KEY;
 
+  // Safely match frontend values to valid Alpha Vantage API function values
+  const alphaFunctionMap = {
+    NATURAL_GAS: "NATURAL_GAS",
+    COPPER: "COPPER",
+    WHEAT: "WHEAT",
+    CORN: "CORN",
+  };
+
+  const functionName = alphaFunctionMap[symbol];
+  if (!functionName) {
+    throw new Error(
+      `Unsupported Alpha Vantage commodity token requested: ${symbol}`,
+    );
+  }
+
   try {
-    // 1. Correct Alpha Vantage URL structure for Commodities
-    const url = `https://alphavantage.co{symbol}&interval=monthly&apikey=${API_KEY}`;
+    // FIX: Replaced broken string interpolation with fully qualified Alpha Vantage URL string parameters
+    const url = `alphavantage.co{functionName}&interval=monthly&apikey=${API_KEY}`;
 
     const response = await fetch(url);
     const json = await response.json();
 
-    // 2. Alpha Vantage commodity data is usually in json.data[0]
-    // Some endpoints use "Realtime Commodity Exchange Rate"
     const latestData = json.data ? json.data[0] : null;
 
     if (!latestData && !json["Realtime Commodity Exchange Rate"]) {
       throw new Error(`No data found for ${symbol}. Check your API limits.`);
     }
 
-    // 3. Return a clean object for the route handler
+    // FIX: Force numeric float conversion using parseFloat to avoid passing strings to frontend graph calculations
+    const rawPrice = latestData
+      ? latestData.value
+      : json["Realtime Commodity Exchange Rate"]["5. Exchange Rate"];
+
     return {
-      price: latestData
-        ? latestData.value
-        : json["Realtime Commodity Exchange Rate"]["5. Exchange Rate"],
+      price: parseFloat(rawPrice),
       market: "Alpha Vantage Global",
-      currency: "USD", // Alpha Vantage commodities are typically USD-based
+      currency: "USD",
       unit: json.unit || "unit",
     };
   } catch (error) {

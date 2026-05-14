@@ -1,17 +1,17 @@
 import PDFDocument from "pdfkit";
-import fs from "node:fs/promises";
+import { createWriteStream } from "node:fs"; // FIX: Required synchronous stream generator
 
-function generatePDF(data) {
+// FIX: Added explicit export declaration to the module
+export function generatePDF(data) {
   const doc = new PDFDocument();
 
-  doc.pipe(fs.createWriteStream("trade-${Date.now()}.pdf"));
+  // FIX: Fixed string variable interpolation with proper backticks (`)
+  doc.pipe(createWriteStream(`trade-${Date.now()}.pdf`));
 
   doc.fontSize(25).text("Commodity Report", 100, 100);
-
-  doc.text(`Customer: ${data.customer.fullName}`);
+  doc.fontSize(14).text(`Customer: ${data.customer.fullName}`);
   doc.text(`${data.commodity} Rate: ${data.price}`);
 
   doc.end();
-
-  console.log("PDF created");
+  console.log("PDF created successfully");
 }

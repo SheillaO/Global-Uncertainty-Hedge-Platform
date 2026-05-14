@@ -1,8 +1,8 @@
-import sanitizehtml from "sanitizehtml";
+// FIX: Corrected official npm module import name syntax structure
+import sanitizehtml from "sanitize-html";
 
 export function sanitizeInput(data) {
   const sanitizedData = {};
-
   for (const [key, value] of Object.entries(data)) {
     if (typeof value === "string") {
       sanitizedData[key] = sanitizehtml(value, {
@@ -13,6 +13,5 @@ export function sanitizeInput(data) {
       sanitizedData[key] = value;
     }
   }
-
   return sanitizedData;
 }
