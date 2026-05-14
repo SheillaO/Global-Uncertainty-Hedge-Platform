@@ -1,49 +1,54 @@
 import yahooFinance from "yahoo-finance2";
 
-// Suppress library validation exception blocks during live production execution
-yahooFinance.setGlobalConfig({ validation: { logErrors: false } });
-
+/**
+ * Fetches live quotes from Yahoo Finance for all commodities
+ * @param {string} commodity - The UI selection name (e.g., "GOLD", "CORN")
+ */
 export async function getYahooPrice(commodity) {
+  // Complete mapping of all 7 interface assets to live Yahoo Futures Contracts
   const tickerMap = {
-    GOLD: "GC=F",
+    // Energy
     WTI: "CL=F",
+    NATURAL_GAS: "NG=F",
+    // Metals
+    GOLD: "GC=F",
     SILVER: "SI=F",
+    COPPER: "HG=F",
+    // Agriculture
+    WHEAT: "ZW=F",
+    CORN: "ZC=F",
   };
 
   const ticker = tickerMap[commodity];
 
   if (!ticker) {
-    throw new Error(`Invalid Yahoo commodity token requested: ${commodity}`);
+    throw new Error(`Ticker mapping not discovered for asset: ${commodity}`);
   }
 
   try {
     const result = await yahooFinance.quote(ticker);
 
-    // Safety fallback block if third-party metrics return empty objects
     if (!result) {
-      throw new Error(
-        `Yahoo Finance empty response payload returned for target ticker ${ticker}`,
-      );
+      throw new Error(`Yahoo Finance returned an empty payload for ${ticker}`);
     }
 
+    // Capture standard market price fields with structural safety fallbacks
     const resolvedPrice =
       result.regularMarketPrice ||
       result.preMarketPrice ||
       result.postMarketPrice;
 
     if (resolvedPrice === undefined || resolvedPrice === null) {
-      throw new Error(
-        `Unable to extract regularMarketPrice metrics for ${ticker}`,
-      );
+      throw new Error(`Unable to extract price data for ${ticker}`);
     }
 
     return {
       price: parseFloat(resolvedPrice),
-      market: result.fullExchangeName || "Yahoo Finance Market Feed",
+      market: result.fullExchangeName || "Yahoo Finance Futures Feed",
       currency: result.currency || "USD",
     };
   } catch (error) {
-    console.error("Yahoo API Subsystem Fault:", error.message);
-    throw new Error(`Subsystem Execution Failure: ${error.message}`);
+    console.error(`Yahoo Engine Error for ${ticker}:`, error.message);
+    throw new Error(`Market Feed Exception: ${error.message}`);
   }
 }
