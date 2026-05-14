@@ -343,12 +343,6 @@ This project welcomes contributions from developers interested in:
 
 ---
 
-## 📜 License
-
-MIT License - See [LICENSE](LICENSE) for details
-
----
-
 ## 💡 Philosophical Foundation
 
 > "The goal isn't to build another trading platform. It's to provide economic resilience tools to populations facing currency crises, food insecurity, and energy shocks. Technology should bridge the gap between institutional finance and everyday people navigating global uncertainty."
@@ -359,9 +353,9 @@ This platform is a proof-of-concept demonstrating how **thoughtful engineering +
 
 ## 📬 Contact
 
-**Developer**: Olga Sheilla  
+**Developer**: Olga Sheilla  | Technical Product Marketing Manager
 **Portfolio**: [GitHub](https://github.com/SheillaO) | [Live Demo](https://globalhedge.netlify.app/)  
-**Gateway API**: [Render Endpoint](https://global-uncertainty-hedge-platform.onrender.com/)
+**Gateway API**: [Render Endpoint](https://global-uncertainty-hedge-platform.onrender.com)
 
 ---
 
