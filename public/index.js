@@ -27,8 +27,14 @@ const newsDisplay = document.getElementById("news-display");
 let lastPrice = 0;
 
 const commodityInfo = {
-  WTI: { unit: "/ bbl", desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil" },
-  NATURAL_GAS: { unit: "/ MMBtu", desc: "* 1 MMBtu = 1 million British Thermal Units" },
+  WTI: {
+    unit: "/ bbl",
+    desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil",
+  },
+  NATURAL_GAS: {
+    unit: "/ MMBtu",
+    desc: "* 1 MMBtu = 1 million British Thermal Units",
+  },
   GOLD: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
   SILVER: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
   COPPER: { unit: "/ lb", desc: "* 1lb = 1 pound of Grade A Copper" },
@@ -42,7 +48,7 @@ function updatePriceUI(newPrice) {
   if (isNaN(price)) return;
 
   if (lastPrice !== 0) {
-    priceChangeCont.className = "price-change"; // Clean original layout positions
+    priceChangeCont.className = "price-change";
     const diff = ((price - lastPrice) / lastPrice) * 100;
 
     if (price > lastPrice) {
@@ -104,7 +110,13 @@ function connectNewsFeed() {
   };
 }
 
-// 5. Interaction Listeners
+// 5. Interaction Listeners & Handlers
+const dialogCloseBtn = dialog.querySelector("button");
+
+dialogCloseBtn.addEventListener("click", () => {
+  dialog.close();
+});
+
 tradeForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const amount = amountInput.value;
@@ -123,24 +135,42 @@ tradeForm.addEventListener("submit", async (e) => {
         amount: amount,
       }),
     });
+
     const result = await response.json();
+
     if (response.ok) {
       updatePriceUI(result.data.price);
-      summaryText.textContent = `Success! You invested ${currencySelect.value} ${amount} in ${commoditySelect.value}.`;
+
+      summaryText.innerHTML = `
+        <div class="modal-success-icon">✓</div>
+        <p><strong>Investment Capital:</strong> ${currencySelect.value} ${parseFloat(amount).toFixed(2)}</p>
+        <p><strong>Target Commodity:</strong> ${commoditySelect.value}</p>
+        <p><strong>Strike Market Rate:</strong> $${parseFloat(result.data.price).toFixed(2)} / ${unitLabel.textContent}</p>
+        <hr style="border: 1px solid rgba(255,215,0,0.2); margin: 15px 0;">
+        <p style="font-size: 11px; opacity: 0.8;">📧 An official transaction confirmation email has been dispatched to your verified inbox profile.</p>
+      `;
+
       dialog.showModal();
+      tradeForm.reset();
+    } else {
+      alert(
+        `Execution Denied: ${result.error || "Unknown server response code"}`,
+      );
     }
   } catch (err) {
-    alert("Trade failed check console.");
+    console.error("Network interface error:", err);
+    alert("Trade failed to execute. Check terminal log connections.");
   } finally {
     investBtn.textContent = "Execute Trade";
     investBtn.disabled = false;
   }
 });
 
+// 6. Selection Options Events Monitoring
 commoditySelect.addEventListener("change", updateStaticUI);
 currencySelect.addEventListener("change", updateStaticUI);
 
-// 6. Initialization
+// 7. Initialization Launch
 updateStaticUI();
 connectNewsFeed();
 setInterval(fetchLivePrice, 30000); // 30s Ticker Update
