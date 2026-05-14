@@ -441,4 +441,30 @@ dialog button:active {
         display: none !important;
     }
 }
+/* ==========================================
+   Brand Logo Layout Positioning
+   ========================================== */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5em;
+    margin-bottom: -0.5em; /* Smoothly pulls heading text closer for vertical symmetry */
+}
+
+.brand-logo {
+    width: 55px;
+    height: 55px;
+    color: var(--gold);
+    /* Injects a subtle glowing halo back behind the logo to match your live pulse dot */
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+    animation: slow-float 4s ease-in-out infinite;
+}
+
+/* Subtle corporate floating animation effect loop */
+@keyframes slow-float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
+}
 
