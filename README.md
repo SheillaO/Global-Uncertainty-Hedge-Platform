@@ -3,6 +3,12 @@
 
 **A real-time commodities trading platform designed to democratize access to strategic resources during periods of global economic volatility.**
 
+<img width="1553" height="867" alt="Hedge" src="https://github.com/user-attachments/assets/63517c7e-c151-401c-a8e7-0fe2d1ebea30" />
+
+
+
+---
+
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://globalhedge.netlify.app/)
 [![API Gateway](https://img.shields.io/badge/API-Render-blue)](https://global-uncertainty-hedge-platform.onrender.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://github.com/SheillaO/Global-Uncertainty-Hedge-Platform)
@@ -185,6 +191,9 @@ The platform tracks seven commodities chosen for their **complementary correlati
 - **Backend Gateway**: Render.com (containerized Node.js deployment)
 - **Data Source**: Alpha Vantage API (fallback to historical simulation)
 
+<img width="712" height="862" alt="Hedge 2" src="https://github.com/user-attachments/assets/6c748dce-1a95-4bfe-8a8d-7c9b09e4592c" />
+
+
 ---
 
 ## 📁 Project Structure
@@ -334,12 +343,6 @@ This project welcomes contributions from developers interested in:
 
 ---
 
-## 📜 License
-
-MIT License - See [LICENSE](LICENSE) for details
-
----
-
 ## 💡 Philosophical Foundation
 
 > "The goal isn't to build another trading platform. It's to provide economic resilience tools to populations facing currency crises, food insecurity, and energy shocks. Technology should bridge the gap between institutional finance and everyday people navigating global uncertainty."
@@ -350,9 +353,9 @@ This platform is a proof-of-concept demonstrating how **thoughtful engineering +
 
 ## 📬 Contact
 
-**Developer**: Olga Sheilla  
+**Developer**: Olga Sheilla  | Technical Product Marketing Manager
 **Portfolio**: [GitHub](https://github.com/SheillaO) | [Live Demo](https://globalhedge.netlify.app/)  
-**Gateway API**: [Render Endpoint](https://global-uncertainty-hedge-platform.onrender.com/)
+**Gateway API**: [Render Endpoint](https://global-uncertainty-hedge-platform.onrender.com)
 
 ---
 
