@@ -1,9 +1,14 @@
-import { getAlphaPrice } from "./alpha.js";
+import { getAlphaPrice } from "./alpha.js"; // Targeting your clean new Alpha Vantage file
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
 import { stories } from "../data/stories.js";
+
+// FIX: Helper function now correctly redirects all 7 commodity requests to Alpha Vantage
+async function fetchPrice(commodity) {
+  return await getAlphaPrice(commodity);
+}
 
 // 1. GET: The Live Ticker
 export async function handleGetPrice(res, symbol) {
@@ -15,7 +20,7 @@ export async function handleGetPrice(res, symbol) {
     }
 
     const cleanSymbol = symbol.trim().toUpperCase();
-    const data = await getYahooPrice(cleanSymbol);
+    const data = await fetchPrice(cleanSymbol);
 
     sendResponse(res, 200, "application/json", JSON.stringify(data));
   } catch (err) {
@@ -35,7 +40,7 @@ export async function handlePost(res, req) {
     const body = await parseJSONBody(req);
     const { commodity, currency, amount } = body;
 
-    const liveData = await getYahooPrice(commodity);
+    const liveData = await fetchPrice(commodity);
 
     const tradeData = {
       customer: { fullName: "Olly Olly", email: "nairobiolga@gmail.com" },
@@ -43,7 +48,7 @@ export async function handlePost(res, req) {
       price: liveData.price,
       currency,
       amount: parseFloat(amount),
-      market: liveData.market || "Yahoo Finance Futures",
+      market: liveData.market || "Alpha Vantage Global Feed",
     };
 
     await saveTrade(tradeData);

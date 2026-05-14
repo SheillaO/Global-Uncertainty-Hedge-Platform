@@ -1,4 +1,4 @@
-import { getAlphaPrice } from "./alpha.js";
+import { getAlphaPrice } from "./alpha.js"; // Targeting your clean new Alpha Vantage file
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
@@ -6,6 +6,7 @@ import { getData } from "../utils/getData.js";
 import { sanitizeInput } from "../utils/sanitizeInput.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
 import { stories } from "../data/stories.js";
+
 // 1. GET: Fetch complete local trade history from data.json
 export async function handleGet(res) {
   try {
@@ -22,7 +23,7 @@ export async function handleGet(res) {
   }
 }
 
-// 2. GET: Fetch single asset live prices via Yahoo Finance
+// 2. GET: Fetch single asset live prices via Alpha Vantage
 export async function handleGetPrice(res, symbol) {
   try {
     if (typeof symbol !== "string") {
@@ -32,7 +33,8 @@ export async function handleGetPrice(res, symbol) {
     }
 
     const cleanSymbol = symbol.trim().toUpperCase();
-    const data = await getYahooPrice(cleanSymbol);
+    // FIX: Redirect function query engine calls to getAlphaPrice
+    const data = await getAlphaPrice(cleanSymbol);
 
     sendResponse(res, 200, "application/json", JSON.stringify(data));
   } catch (err) {
@@ -53,7 +55,8 @@ export async function handlePost(res, req) {
     const sanitizedBody = sanitizeInput(body);
     const { commodity, currency, amount } = sanitizedBody;
 
-    const liveData = await getYahooPrice(commodity);
+    // FIX: Redirect function query engine calls to getAlphaPrice
+    const liveData = await getAlphaPrice(commodity);
 
     const tradeData = {
       customer: { fullName: "Olly Olly", email: "nairobiolga@gmail.com" },
@@ -61,7 +64,7 @@ export async function handlePost(res, req) {
       price: liveData.price,
       currency,
       amount: parseFloat(amount),
-      market: liveData.market || "Yahoo Finance Futures",
+      market: liveData.market || "Alpha Vantage Global Feed",
     };
 
     await saveTrade(tradeData);
