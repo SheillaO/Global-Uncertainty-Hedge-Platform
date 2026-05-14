@@ -5,6 +5,8 @@ const API_BASE_URL =
     ? "http://localhost:5500"
     : "https://global-uncertainty-hedge-platform.onrender.com";
 
+
+
 // 1. Elements
 const commoditySelect = document.getElementById("commodity-select");
 const currencySelect = document.getElementById("currency-select");
@@ -14,6 +16,9 @@ const footnoteDisplay = document.getElementById("footnote-display");
 const currencySymbols = document.querySelectorAll(".currency");
 const currencySymbolMain = document.getElementById("currency-symbol");
 const amountInput = document.getElementById("investment-amount");
+// INTEGRATED: Multi-user input field caching handles
+const investorNameInput = document.getElementById("investor-name");
+const investorEmailInput = document.getElementById("investor-email");
 const tradeForm = document.getElementById("trade-form");
 const investBtn = document.getElementById("invest-btn");
 const dialog = document.getElementById("summary-dialog");
@@ -114,12 +119,16 @@ dialogCloseBtn.addEventListener("click", () => {
 tradeForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const amount = amountInput.value;
+  const fullName = investorNameInput.value;
+  const email = investorEmailInput.value;
+  
   if (!amount || amount <= 0) return alert("Enter a valid amount");
 
   investBtn.textContent = "Processing...";
   investBtn.disabled = true;
 
   try {
+    // INTEGRATED: Full network payload parameters targeting dynamic multi-user data capture
     const response = await fetch(`${API_BASE_URL}/trade`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -127,6 +136,8 @@ tradeForm.addEventListener("submit", async (e) => {
         commodity: commoditySelect.value,
         currency: currencySelect.value,
         amount: amount,
+        fullName: fullName, 
+        email: email        
       }),
     });
     

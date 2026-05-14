@@ -47,17 +47,22 @@ export async function handleGetPrice(res, symbol) {
   }
 }
 
-// 3. POST: Process an investment order execution
+// 3. POST: Process an investment order execution (Dynamic Multi-User Integration)
 export async function handlePost(res, req) {
   try {
     const body = await parseJSONBody(req);
     const sanitizedBody = sanitizeInput(body);
-    const { commodity, currency, amount } = sanitizedBody;
+
+    // Extract dynamic form metadata parameters sent from the frontend template layout
+    const { commodity, currency, amount, fullName, email } = sanitizedBody;
 
     const liveData = await getAlphaPrice(commodity);
 
     const tradeData = {
-      customer: { fullName: "Olly Olly", email: "nairobiolga@gmail.com" },
+      customer: {
+        fullName: fullName || "Anonymous Investor",
+        email: email || "nairobiolga@gmail.com", // Safe production fallback
+      },
       commodity,
       price: liveData.price,
       currency,
@@ -90,17 +95,17 @@ export async function handleNews(req, res) {
   // Clear and configure the continuous streaming content response channel
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache, no-transform", // FIX: added 'no-transform' to block proxy compression filters
+    "Cache-Control": "no-cache, no-transform",
     Connection: "keep-alive",
-    "X-Accel-Buffering": "no", // FIX: directly orders corporate proxies (like Nginx/Cloudflare) to disable buffering
+    "X-Accel-Buffering": "no",
   });
 
-  // ✅ CRITICAL FIX: Forces Render's proxy buffer to open its channel gate immediately
+  // Force Render's internal gateway proxy buffers to open instantly
   if (typeof res.flushHeaders === "function") {
     res.flushHeaders();
   }
 
-  // Immediately push a starting data connection ping down the text line
+  // Push starting configuration handshake string down the text wire channel
   res.write(
     `data: ${JSON.stringify({ event: "news-update", story: "Connected to global marketplace news feed..." })}\n\n`,
   );
@@ -108,7 +113,6 @@ export async function handleNews(req, res) {
   const intervalId = setInterval(() => {
     let randomIndex = Math.floor(Math.random() * stories.length);
 
-    // Explicit double trailing newline characters (\n\n) required by browser standard listeners
     res.write(
       `data: ${JSON.stringify({
         event: "news-update",
@@ -117,7 +121,7 @@ export async function handleNews(req, res) {
     );
   }, 5000);
 
-  // Clear memory timers immediately when a client tab closes or leaves the page
+  // Free allocated background memory limits immediately when user leaves page
   req.on("close", () => {
     clearInterval(intervalId);
     res.end();
