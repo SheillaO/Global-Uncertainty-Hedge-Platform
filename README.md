@@ -191,6 +191,9 @@ The platform tracks seven commodities chosen for their **complementary correlati
 - **Backend Gateway**: Render.com (containerized Node.js deployment)
 - **Data Source**: Alpha Vantage API (fallback to historical simulation)
 
+<img width="712" height="862" alt="Hedge 2" src="https://github.com/user-attachments/assets/6c748dce-1a95-4bfe-8a8d-7c9b09e4592c" />
+
+
 ---
 
 ## 📁 Project Structure
