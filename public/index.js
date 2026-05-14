@@ -27,14 +27,8 @@ const newsDisplay = document.getElementById("news-display");
 let lastPrice = 0;
 
 const commodityInfo = {
-  WTI: {
-    unit: "/ bbl",
-    desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil",
-  },
-  NATURAL_GAS: {
-    unit: "/ MMBtu",
-    desc: "* 1 MMBtu = 1 million British Thermal Units",
-  },
+  WTI: { unit: "/ bbl", desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil" },
+  NATURAL_GAS: { unit: "/ MMBtu", desc: "* 1 MMBtu = 1 million British Thermal Units" },
   GOLD: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
   SILVER: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
   COPPER: { unit: "/ lb", desc: "* 1lb = 1 pound of Grade A Copper" },
@@ -48,7 +42,7 @@ function updatePriceUI(newPrice) {
   if (isNaN(price)) return;
 
   if (lastPrice !== 0) {
-    priceChangeCont.classList.remove("positive", "negative", "neutral");
+    priceChangeCont.className = "price-change"; // Clean original layout positions
     const diff = ((price - lastPrice) / lastPrice) * 100;
 
     if (price > lastPrice) {
