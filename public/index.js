@@ -1,3 +1,10 @@
+// --- Environment & API Base Configuration ---
+const API_BASE_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5500"
+    : "onrender.com"; // Replace with your actual live Render Web Service URL later
+
 // 1. Elements
 const commoditySelect = document.getElementById("commodity-select");
 const currencySelect = document.getElementById("currency-select");
@@ -7,14 +14,12 @@ const footnoteDisplay = document.getElementById("footnote-display");
 const currencySymbols = document.querySelectorAll(".currency");
 const currencySymbolMain = document.getElementById("currency-symbol");
 const amountInput = document.getElementById("investment-amount");
-// FIX: The form submits, so grabbing the form directly helps control execution cleanly
 const tradeForm = document.getElementById("trade-form");
 const investBtn = document.getElementById("invest-btn");
 const dialog = document.getElementById("summary-dialog");
 const summaryText = document.getElementById("investment-summary");
 const priceChangeCont = document.getElementById("price-change");
 const changeValue = priceChangeCont.querySelector(".change-value");
-// FIX: Added reference to change icon span to handle your HTML's custom dot/icon structure
 const changeIcon = priceChangeCont.querySelector(".change-icon");
 const newsDisplay = document.getElementById("news-display");
 
@@ -43,7 +48,6 @@ function updatePriceUI(newPrice) {
   if (isNaN(price)) return;
 
   if (lastPrice !== 0) {
-    // FIX: Class names updated to "positive", "negative", and "neutral" to match standard styling naming patterns
     priceChangeCont.classList.remove("positive", "negative", "neutral");
     const diff = ((price - lastPrice) / lastPrice) * 100;
 
@@ -81,7 +85,8 @@ function updateStaticUI() {
 async function fetchLivePrice() {
   try {
     const symbol = commoditySelect.value;
-    const response = await fetch(`http://localhost:5500/price/${symbol}`);
+    // INTEGRATED: Swapped static string out for dynamic runtime API_BASE_URL environment context
+    const response = await fetch(`${API_BASE_URL}/price/${symbol}`);
     const result = await response.json();
     if (result.price) updatePriceUI(result.price);
   } catch (err) {
@@ -90,7 +95,8 @@ async function fetchLivePrice() {
 }
 
 function connectNewsFeed() {
-  const eventSource = new EventSource("http://localhost:5500/news");
+  // INTEGRATED: Live event streaming endpoint re-routed through API_BASE_URL mapping parameters
+  const eventSource = new EventSource(`${API_BASE_URL}/news`);
 
   eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
@@ -107,7 +113,6 @@ function connectNewsFeed() {
 }
 
 // 5. Interaction Listeners
-// FIX: Attached listener to form submit rather than button click to stop native page reload issues
 tradeForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const amount = amountInput.value;
@@ -117,7 +122,8 @@ tradeForm.addEventListener("submit", async (e) => {
   investBtn.disabled = true;
 
   try {
-    const response = await fetch("http://localhost:5500/trade", {
+    // INTEGRATED: Transaction execution route safely bound through target production variable keys
+    const response = await fetch(`${API_BASE_URL}/trade`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
