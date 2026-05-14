@@ -5,7 +5,7 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://globalhedge.netlify.app/)
 [![API Gateway](https://img.shields.io/badge/API-Render-blue)](https://global-uncertainty-hedge-platform.onrender.com/)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green)]()
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://github.com/SheillaO/Global-Uncertainty-Hedge-Platform)
 
 ---
 
