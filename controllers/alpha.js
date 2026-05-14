@@ -25,6 +25,7 @@ export async function getAlphaPrice(symbol) {
     const url = `alphavantage.co{functionName}&interval=monthly&apikey=${API_KEY}`;
 
 
+
     const response = await fetch(url);
     const json = await response.json();
 
