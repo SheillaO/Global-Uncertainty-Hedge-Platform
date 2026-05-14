@@ -3,6 +3,12 @@
 
 **A real-time commodities trading platform designed to democratize access to strategic resources during periods of global economic volatility.**
 
+<img width="1553" height="867" alt="Hedge" src="https://github.com/user-attachments/assets/63517c7e-c151-401c-a8e7-0fe2d1ebea30" />
+
+
+
+---
+
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://globalhedge.netlify.app/)
 [![API Gateway](https://img.shields.io/badge/API-Render-blue)](https://global-uncertainty-hedge-platform.onrender.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)]()
