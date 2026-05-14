@@ -2,10 +2,28 @@ import { getYahooPrice } from "./yahoo.js";
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
+import { getData } from "../utils/getData.js"; // FIXED: Added missing import to prevent history crash
+import { sanitizeInput } from "../utils/sanitizeInput.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
 import { stories } from "../data/stories.js";
 
-// 1. GET: The Live Ticker
+// 1. GET: Fetch complete local trade history from data.json
+export async function handleGet(res) {
+  try {
+    const data = await getData();
+    sendResponse(res, 200, "application/json", JSON.stringify(data));
+  } catch (err) {
+    console.error("History Load Error:", err.message);
+    sendResponse(
+      res,
+      500,
+      "application/json",
+      JSON.stringify({ error: "Failed to load trade history logs" }),
+    );
+  }
+}
+
+// 2. GET: Fetch single asset live prices via Yahoo Finance
 export async function handleGetPrice(res, symbol) {
   try {
     if (typeof symbol !== "string") {
@@ -15,12 +33,11 @@ export async function handleGetPrice(res, symbol) {
     }
 
     const cleanSymbol = symbol.trim().toUpperCase();
-    // Every asset routes natively through Yahoo Finance now
     const data = await getYahooPrice(cleanSymbol);
 
     sendResponse(res, 200, "application/json", JSON.stringify(data));
   } catch (err) {
-    console.error("Ticker Exception Triggered:", err.message);
+    console.error("Ticker Feed Error:", err.message);
     sendResponse(
       res,
       500,
@@ -30,11 +47,12 @@ export async function handleGetPrice(res, symbol) {
   }
 }
 
-// 2. POST: The "Invest Now" Button Handler
+// 3. POST: Process an investment order execution
 export async function handlePost(res, req) {
   try {
     const body = await parseJSONBody(req);
-    const { commodity, currency, amount } = body;
+    const sanitizedBody = sanitizeInput(body);
+    const { commodity, currency, amount } = sanitizedBody;
 
     const liveData = await getYahooPrice(commodity);
 
@@ -57,7 +75,7 @@ export async function handlePost(res, req) {
       JSON.stringify({ status: "Success", data: tradeData }),
     );
   } catch (err) {
-    console.error("Trade Error:", err.message);
+    console.error("Trade Execution Error:", err.message);
     sendResponse(
       res,
       500,
@@ -67,7 +85,7 @@ export async function handlePost(res, req) {
   }
 }
 
-// 3. GET: The Live News Stream (SSE)
+// 4. GET: Handle the Server-Sent Events (SSE) live breaking news ticker stream
 export async function handleNews(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",

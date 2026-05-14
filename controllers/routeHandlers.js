@@ -1,23 +1,13 @@
 import { getYahooPrice } from "./yahoo.js";
-import { getAlphaPrice } from "./alpha.js";
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
 import { stories } from "../data/stories.js";
 
-async function fetchPrice(commodity) {
-  if (["GOLD", "WTI", "SILVER"].includes(commodity)) {
-    return await getYahooPrice(commodity);
-  } else {
-    return await getAlphaPrice(commodity);
-  }
-}
-
-// 1. GET: The Live Ticker (With Strict Runtime Type Validation)
+// 1. GET: The Live Ticker
 export async function handleGetPrice(res, symbol) {
   try {
-    // FIX: Safety check to prevent array-to-string type exceptions inside upstream tickers
     if (typeof symbol !== "string") {
       throw new Error(
         `Invalid symbol data structure passed: ${JSON.stringify(symbol)}`,
@@ -25,7 +15,7 @@ export async function handleGetPrice(res, symbol) {
     }
 
     const cleanSymbol = symbol.trim().toUpperCase();
-    const data = await fetchPrice(cleanSymbol);
+    const data = await getYahooPrice(cleanSymbol);
 
     sendResponse(res, 200, "application/json", JSON.stringify(data));
   } catch (err) {
@@ -45,15 +35,15 @@ export async function handlePost(res, req) {
     const body = await parseJSONBody(req);
     const { commodity, currency, amount } = body;
 
-    const liveData = await fetchPrice(commodity);
+    const liveData = await getYahooPrice(commodity);
 
     const tradeData = {
       customer: { fullName: "Olly Olly", email: "nairobiolga@gmail.com" },
       commodity,
       price: liveData.price,
       currency,
-      amount: parseFloat(amount), // FIX: Enforce number safety parsing on numeric payloads
-      market: liveData.market || "Global Market",
+      amount: parseFloat(amount),
+      market: liveData.market || "Yahoo Finance Futures",
     };
 
     await saveTrade(tradeData);
@@ -76,7 +66,7 @@ export async function handlePost(res, req) {
   }
 }
 
-// 3. GET: The Live News Stream (SSE Engine)
+// 3. GET: The Live News Stream (SSE)
 export async function handleNews(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
@@ -94,7 +84,6 @@ export async function handleNews(req, res) {
     );
   }, 5000);
 
-  // Clean up server-side reference pools when a user disconnects
   req.on("close", () => {
     clearInterval(intervalId);
     res.end();
