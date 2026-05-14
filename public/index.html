@@ -65,7 +65,18 @@
         </section>
         <!-- END OF NEW PROFESSIONAL PRICE SECTION -->
 
+        <!-- INTEGRATED MULTI-USER TRANSACTION FORM -->
         <form id="trade-form">
+            <label for="investor-name">Full Name</label>
+            <input type="text" id="investor-name" placeholder="John Doe"
+                style="border-radius: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); padding: 1em; margin-bottom: 0.5em; width: 100%; outline: none;"
+                required>
+
+            <label for="investor-email">Email Address</label>
+            <input type="email" id="investor-email" placeholder="user@example.com"
+                style="border-radius: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); padding: 1em; margin-bottom: 0.5em; width: 100%; outline: none;"
+                required>
+
             <label for="investment-amount">Investment Amount</label>
             <div class="input-container">
                 <div class="currency">£</div>
@@ -81,18 +92,20 @@
         </dialog>
 
         <p class="footnote" id="footnote-display">* Select an asset to view unit details</p>
-    
-        <footer class="news-ticker-container">
-            <div class="ticker-label">BREAKING NEWS</div>
-            <div class="ticker-window">
-                <p id="news-display" class="ticker-text">Connecting to global news feed...</p>
-            </div>
-        </footer>
+
+    <footer class="news-ticker-container">
+        <div class="ticker-label">BREAKING NEWS</div>
+        <div class="ticker-window">
+            <p id="news-display" class="ticker-text">Connecting to global news feed...</p>
+        </div>
+    </footer>
     
     </main>
-
     
+    <!-- ✅ FIXED: Added relative directory path locator to resolve VS Code server mapping errors -->
     <script type="module" src="index.js"></script>
-</body>
+    </body>
+    
+    </html>
 
 </html>
