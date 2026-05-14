@@ -363,4 +363,18 @@ dialog button:active {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
 }
+/* Styled Internal Dashboard Printing Utility Link */
+.modal-print-btn {
+    background: transparent !important;
+    border: 2px solid var(--gold) !important;
+    color: var(--gold) !important;
+    margin-top: 5px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease;
+}
+
+.modal-print-btn:hover {
+    background: rgba(255, 215, 0, 0.1) !important;
+    color: #fff !important;
+}
 

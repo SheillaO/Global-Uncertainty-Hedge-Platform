@@ -27,14 +27,8 @@ const newsDisplay = document.getElementById("news-display");
 let lastPrice = 0;
 
 const commodityInfo = {
-  WTI: {
-    unit: "/ bbl",
-    desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil",
-  },
-  NATURAL_GAS: {
-    unit: "/ MMBtu",
-    desc: "* 1 MMBtu = 1 million British Thermal Units",
-  },
+  WTI: { unit: "/ bbl", desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil" },
+  NATURAL_GAS: { unit: "/ MMBtu", desc: "* 1 MMBtu = 1 million British Thermal Units" },
   GOLD: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
   SILVER: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
   COPPER: { unit: "/ lb", desc: "* 1lb = 1 pound of Grade A Copper" },
@@ -135,27 +129,32 @@ tradeForm.addEventListener("submit", async (e) => {
         amount: amount,
       }),
     });
-
+    
     const result = await response.json();
-
+    
     if (response.ok) {
       updatePriceUI(result.data.price);
-
+      
+      const cleanUnitLabel = unitLabel.textContent.replace("/", "").trim();
+      
       summaryText.innerHTML = `
         <div class="modal-success-icon">✓</div>
         <p><strong>Investment Capital:</strong> ${currencySelect.value} ${parseFloat(amount).toFixed(2)}</p>
         <p><strong>Target Commodity:</strong> ${commoditySelect.value}</p>
-        <p><strong>Strike Market Rate:</strong> $${parseFloat(result.data.price).toFixed(2)} / ${unitLabel.textContent}</p>
+        <p><strong>Strike Market Rate:</strong> $${parseFloat(result.data.price).toFixed(2)} / ${cleanUnitLabel}</p>
         <hr style="border: 1px solid rgba(255,215,0,0.2); margin: 15px 0;">
-        <p style="font-size: 11px; opacity: 0.8;">📧 An official transaction confirmation email has been dispatched to your verified inbox profile.</p>
+        <p style="font-size: 11px; opacity: 0.9; text-align: center; margin-bottom: 12px;">
+          📧 A secure confirmation email with your attached PDF contract has been sent to your verified inbox profile.
+        </p>
+        <button type="button" onclick="window.print()" class="modal-print-btn">
+          🖨️ Print Dashboard Receipt
+        </button>
       `;
-
+      
       dialog.showModal();
-      tradeForm.reset();
+      tradeForm.reset(); 
     } else {
-      alert(
-        `Execution Denied: ${result.error || "Unknown server response code"}`,
-      );
+      alert(`Execution Denied: ${result.error || "Unknown server response code"}`);
     }
   } catch (err) {
     console.error("Network interface error:", err);
