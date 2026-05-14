@@ -1,4 +1,8 @@
-import yahooFinance from "yahoo-finance2";
+// FIX 1: Import the base class constructor exactly as documented in the Quickstart
+import YahooFinance from "yahoo-finance2";
+
+// FIX 2: Instantiate the client instance locally to unlock API modules safely
+const yahooFinance = new YahooFinance();
 
 /**
  * Fetches live quotes from Yahoo Finance for all commodities
@@ -22,20 +26,18 @@ export async function getYahooPrice(commodity) {
   }
 
   try {
-    // FIX: Deactivate internal runtime validation rules entirely
+    // FIX 3: Pass empty query parameters {} as arg 2, and validation overrides as arg 3
     const result = await yahooFinance.quote(
       ticker,
       {},
-      {
-        validateResult: false,
-      },
+      { validateResult: false },
     );
 
     if (!result) {
       throw new Error(`Yahoo Finance returned an empty payload for ${ticker}`);
     }
 
-    // Capture standard market price fields with structural safety fallbacks
+    // Capture price indicators with defensive structural fallbacks
     const resolvedPrice =
       result.regularMarketPrice ||
       result.preMarketPrice ||
