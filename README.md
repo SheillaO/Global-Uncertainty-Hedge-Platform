@@ -70,7 +70,7 @@ In an era defined by geopolitical conflicts, supply chain disruptions, and curre
 Instead of relying solely on delayed API responses, the platform implements a **time-coupled oscillation model** that generates realistic price movements:
 
 ```javascript
-// Bind index to current minute (cycles through 14 data points every 14 minutes)
+
 const targetIndex = currentMinute % priceTimeline.length;
 const historicalBasePrice = priceTimeline[targetIndex];
 
@@ -112,7 +112,7 @@ res.writeHead(200, {
   'Content-Type': 'text/event-stream',
   'Cache-Control': 'no-cache, no-transform',
   'Connection': 'keep-alive',
-  'X-Accel-Buffering': 'no' // Disables Render.com's proxy buffering
+  'X-Accel-Buffering': 'no' 
 });
 
 // Push news every 5 seconds

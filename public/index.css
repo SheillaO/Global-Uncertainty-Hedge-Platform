@@ -1,6 +1,3 @@
-/* ==========================================
-   1. Core Reset & Variable Configurations
-   ========================================== */
 :root {
     --bg: black;
     --gold: gold;
@@ -51,9 +48,7 @@ main {
     -webkit-text-fill-color: transparent;
 }
 
-/* ==========================================
-   2. Input Dropdowns & Labels
-   ========================================== */
+
 .asset-selector, .settings {
     position: relative;
     display: flex;
@@ -98,9 +93,6 @@ label {
     font-weight: 600;
 }
 
-/* ==========================================
-   3. Live Metrics Display Container
-   ========================================== */
 .price-info-container {
     position: relative; 
     display: flex;
@@ -178,9 +170,8 @@ label {
 .price-change.positive { color: #2ecc71; }      
 .price-change.negative { color: #e74c3c; }    
 
-/* ==========================================
-   4. Trading Input Form Buttons
-   ========================================== */
+
+  
 #trade-form {
     display: flex;
     flex-direction: column;
@@ -249,9 +240,7 @@ input[type="number"] {
     border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-/* ==========================================
-   5. Dialog Modals Layout (Centered)
-   ========================================== */
+
 dialog {
     position: fixed;
     top: 50%;
@@ -341,7 +330,7 @@ dialog button:active {
 }
 
 /* ==========================================
-   6. News Ticker Stream Layout
+   News Ticker Stream Layout
    ========================================== */
 .news-ticker-container {
     margin-top: 1rem;
@@ -388,13 +377,13 @@ dialog button:active {
     100% { transform: translate3d(-100%, 0, 0); }
 }
 
-/* Local Hidden Print Element Layer - Invisible during Web View browser sessions */
+
 #printable-receipt-container {
     display: none;
 }
 
 /* ==========================================
-   7. Advanced Customized Print Receipts Styles
+   Advanced Customized Print Receipts Styles
    ========================================== */
 @media print {
     html, body {
@@ -403,13 +392,13 @@ dialog button:active {
         font-family: 'Helvetica Neue', Arial, sans-serif !important;
     }
 
-    /* Target and hide the entire main dashboard screen infrastructure and dialog overlay layers */
+    
     main, dialog, ::backdrop {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* Reveal the dynamic plain-text printing container element beautifully */
+    
     #printable-receipt-container {
         display: block !important;
         visibility: visible !important;
@@ -434,7 +423,7 @@ dialog button:active {
         color: #111111 !important;
     }
 
-    /* Hide the success icons and notification text notes from formal paper invoice receipts */
+    
     #printable-receipt-container .modal-success-icon,
     #printable-receipt-container p:last-of-type,
     #printable-receipt-container button {
@@ -449,19 +438,18 @@ dialog button:active {
     justify-content: center;
     align-items: center;
     margin-top: 0.5em;
-    margin-bottom: -0.5em; /* Smoothly pulls heading text closer for vertical symmetry */
+    margin-bottom: -0.5em; 
 }
 
 .brand-logo {
     width: 55px;
     height: 55px;
     color: var(--gold);
-    /* Injects a subtle glowing halo back behind the logo to match your live pulse dot */
     filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
     animation: slow-float 4s ease-in-out infinite;
 }
 
-/* Subtle corporate floating animation effect loop */
+
 @keyframes slow-float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-4px); }
@@ -469,7 +457,7 @@ dialog button:active {
 }
 
 /* ==========================================
-   8. Portfolio Attribution Footer Links Styles
+   Portfolio Attribution Footer Links Styles
    ========================================== */
 .portfolio-footer-links {
     font-size: 11px;

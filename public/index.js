@@ -1,4 +1,3 @@
-// --- Environment & API Base Configuration ---
 const API_BASE_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
@@ -29,8 +28,14 @@ const newsDisplay = document.getElementById("news-display");
 let lastPrice = 0;
 
 const commodityInfo = {
-  WTI: { unit: "/ bbl", desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil" },
-  NATURAL_GAS: { unit: "/ MMBtu", desc: "* 1 MMBtu = 1 million British Thermal Units" },
+  WTI: {
+    unit: "/ bbl",
+    desc: "* 1bbl = 1 barrel (42 US gallons) of Crude Oil",
+  },
+  NATURAL_GAS: {
+    unit: "/ MMBtu",
+    desc: "* 1 MMBtu = 1 million British Thermal Units",
+  },
   GOLD: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 24 Carat Gold" },
   SILVER: { unit: "/ ozt", desc: "* 1ozt = 1 troy ounce of 99.9% Pure Silver" },
   COPPER: { unit: "/ lb", desc: "* 1lb = 1 pound of Grade A Copper" },
@@ -113,15 +118,13 @@ dialogCloseBtn.addEventListener("click", () => {
   dialog.close();
 });
 
-// ✅ FIXED PRINT HANDLER ENGINE: Duplicates data into a printable block layer dynamically
 function executeDashboardPrint() {
   const printArea = document.createElement("div");
   printArea.id = "printable-receipt-container";
-  
-  // Clone current text metadata variables from layout directly
+
   const dateString = new Date().toLocaleString();
   const summaryContent = summaryText.innerHTML;
-  
+
   printArea.innerHTML = `
     <h1 style="font-size: 22pt; margin-bottom: 5px; border-bottom: 2px solid #000000; padding-bottom: 8px;">GLOBAL TRADE DESK</h1>
     <h3 style="font-size: 12pt; margin-bottom: 25px; color: #444444;">Official Asset Contract Agreement Receipt</h3>
@@ -132,11 +135,10 @@ function executeDashboardPrint() {
       <strong>Transaction Status:</strong> Allocation Settled
     </div>
   `;
-  
+
   document.body.appendChild(printArea);
   window.print();
-  
-  // Instantly flush the temporary printing element from the DOM once print opens
+
   document.body.removeChild(printArea);
 }
 
@@ -145,7 +147,7 @@ tradeForm.addEventListener("submit", async (e) => {
   const amount = amountInput.value;
   const fullName = investorNameInput.value;
   const email = investorEmailInput.value;
-  
+
   if (!amount || amount <= 0) return alert("Enter a valid amount");
 
   investBtn.textContent = "Processing...";
@@ -159,18 +161,18 @@ tradeForm.addEventListener("submit", async (e) => {
         commodity: commoditySelect.value,
         currency: currencySelect.value,
         amount: amount,
-        fullName: fullName, 
-        email: email        
+        fullName: fullName,
+        email: email,
       }),
     });
-    
+
     const result = await response.json();
-    
+
     if (response.ok) {
       updatePriceUI(result.data.price);
-      
+
       const cleanUnitLabel = unitLabel.textContent.replace("/", "").trim();
-      
+
       summaryText.innerHTML = `
         <div class="modal-success-icon">✓</div>
         <p><strong>Investment Capital:</strong> ${currencySelect.value} ${parseFloat(amount).toFixed(2)}</p>
@@ -184,14 +186,17 @@ tradeForm.addEventListener("submit", async (e) => {
           🖨️ Print Dashboard Receipt
         </button>
       `;
-      
-      // Map print function hook to the newly created button injection inside innerHTML
-      document.getElementById("modal-trigger-print").addEventListener("click", executeDashboardPrint);
-      
+
+      document
+        .getElementById("modal-trigger-print")
+        .addEventListener("click", executeDashboardPrint);
+
       dialog.showModal();
-      tradeForm.reset(); 
+      tradeForm.reset();
     } else {
-      alert(`Execution Denied: ${result.error || "Unknown server response code"}`);
+      alert(
+        `Execution Denied: ${result.error || "Unknown server response code"}`,
+      );
     }
   } catch (err) {
     console.error("Network interface error:", err);
@@ -209,4 +214,4 @@ currencySelect.addEventListener("change", updateStaticUI);
 // 7. Initialization Launch
 updateStaticUI();
 connectNewsFeed();
-setInterval(fetchLivePrice, 30000); // 30s Ticker Update
+setInterval(fetchLivePrice, 10000); // 30s Ticker Update

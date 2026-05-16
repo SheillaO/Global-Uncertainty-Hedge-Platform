@@ -16,116 +16,105 @@
 
 <body>
     <main>
-            <main>
-                <!-- ✅ ADD THE LOGO CONTAINER DIRECTLY HERE -->
-                <div class="logo-container">
-                    <svg class="brand-logo" xmlns="w3.org" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    </svg>
+        <main>
+            <div class="logo-container">
+                <svg class="brand-logo" xmlns="w3.org" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+            </div>
+
+            <h1 class="title">Global Trade</h1>
+
+            <section class="asset-selector">
+                <label for="commodity-select">Select Commodity</label>
+                <select id="commodity-select">
+                    <optgroup label="Energy">
+                        <option value="WTI" data-unit="bbl">Crude Oil (WTI)</option>
+                        <option value="NATURAL_GAS" data-unit="MMBtu">Natural Gas</option>
+                    </optgroup>
+                    <optgroup label="Metals">
+                        <option value="GOLD" data-unit="ozt" selected>Gold</option>
+                        <option value="SILVER" data-unit="ozt">Silver</option>
+                        <option value="COPPER" data-unit="lb">Copper</option>
+                    </optgroup>
+                    <optgroup label="Agriculture">
+                        <option value="WHEAT" data-unit="bu">Wheat</option>
+                        <option value="CORN" data-unit="bu">Corn</option>
+                    </optgroup>
+                </select>
+            </section>
+
+            <section class="settings">
+                <label for="currency-select">Currency:</label>
+                <select id="currency-select">
+                    <option value="GBP">£ GBP</option>
+                    <option value="USD">$ USD</option>
+                </select>
+            </section>
+
+            <section class="price-info-container">
+                <div class="market-pulse">
+                    <span class="status-dot"></span>
+                    <p id="connection-status" class="status">LIVE MARKET</p>
                 </div>
+
+                <div class="price-display-wrapper">
+                    <span id="currency-symbol" class="currency-symbol">£</span>
+                    <span id="price-display" class="price">----.--</span>
+                    <span id="unit-label" class="unit">/ ozt</span>
+                </div>
+
+                <div id="price-change" class="price-change neutral">
+                    <span class="change-value">0.00%</span>
+                    <span class="change-icon">●</span>
+                </div>
+            </section>
             
-            
-                <!-- Rest of your standard layout code follows exactly the same... -->
 
-        <h1 class="title">Global Trade</h1>
+         
+            <form id="trade-form">
+                <label for="investor-name">Full Name</label>
+                <input type="text" id="investor-name" placeholder="John Doe"
+                    style="border-radius: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); padding: 1em; margin-bottom: 0.5em; width: 100%; outline: none;"
+                    required>
 
-        <section class="asset-selector">
-            <label for="commodity-select">Select Commodity</label>
-            <select id="commodity-select">
-                <optgroup label="Energy">
-                    <option value="WTI" data-unit="bbl">Crude Oil (WTI)</option>
-                    <option value="NATURAL_GAS" data-unit="MMBtu">Natural Gas</option>
-                </optgroup>
-                <optgroup label="Metals">
-                    <option value="GOLD" data-unit="ozt" selected>Gold</option>
-                    <option value="SILVER" data-unit="ozt">Silver</option>
-                    <option value="COPPER" data-unit="lb">Copper</option>
-                </optgroup>
-                <optgroup label="Agriculture">
-                    <option value="WHEAT" data-unit="bu">Wheat</option>
-                    <option value="CORN" data-unit="bu">Corn</option>
-                </optgroup>
-            </select>
-        </section>
+                <label for="investor-email">Email Address</label>
+                <input type="email" id="investor-email" placeholder="user@example.com"
+                    style="border-radius: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); padding: 1em; margin-bottom: 0.5em; width: 100%; outline: none;"
+                    required>
 
-        <section class="settings">
-            <label for="currency-select">Currency:</label>
-            <select id="currency-select">
-                <option value="GBP">£ GBP</option>
-                <option value="USD">$ USD</option>
-            </select>
-        </section>
+                <label for="investment-amount">Investment Amount</label>
+                <div class="input-container">
+                    <div class="currency">£</div>
+                    <input type="number" id="investment-amount" placeholder="500.00" min="1" step="any" required>
+                </div>
+                <button type="submit" id="invest-btn" class="invest-btn">Execute Trade</button>
+            </form>
 
-        <!-- START OF NEW PROFESSIONAL PRICE SECTION -->
-        <section class="price-info-container">
-            <div class="market-pulse">
-                <span class="status-dot"></span>
-                <p id="connection-status" class="status">LIVE MARKET</p>
-            </div>
+            <dialog class="outputs" id="summary-dialog">
+                <h2 id="dialog-title">Trade Confirmation</h2>
+                <p id="investment-summary">Processing your order...</p>
+                <button formmethod="dialog" autofocus>Close</button>
+            </dialog>
 
-            <div class="price-display-wrapper">
-                <span id="currency-symbol" class="currency-symbol">£</span>
-                <span id="price-display" class="price">----.--</span>
-                <span id="unit-label" class="unit">/ ozt</span>
-            </div>
-
-            <div id="price-change" class="price-change neutral">
-                <span class="change-value">0.00%</span>
-                <span class="change-icon">●</span>
-            </div>
-        </section>
-        <!-- END OF NEW PROFESSIONAL PRICE SECTION -->
-
-        <!-- INTEGRATED MULTI-USER TRANSACTION FORM -->
-        <form id="trade-form">
-            <label for="investor-name">Full Name</label>
-            <input type="text" id="investor-name" placeholder="John Doe"
-                style="border-radius: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); padding: 1em; margin-bottom: 0.5em; width: 100%; outline: none;"
-                required>
-
-            <label for="investor-email">Email Address</label>
-            <input type="email" id="investor-email" placeholder="user@example.com"
-                style="border-radius: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); padding: 1em; margin-bottom: 0.5em; width: 100%; outline: none;"
-                required>
-
-            <label for="investment-amount">Investment Amount</label>
-            <div class="input-container">
-                <div class="currency">£</div>
-                <input type="number" id="investment-amount" placeholder="500.00" min="1" step="any" required>
-            </div>
-            <button type="submit" id="invest-btn" class="invest-btn">Execute Trade</button>
-        </form>
-
-        <dialog class="outputs" id="summary-dialog">
-            <h2 id="dialog-title">Trade Confirmation</h2>
-            <p id="investment-summary">Processing your order...</p>
-            <button formmethod="dialog" autofocus>Close</button>
-        </dialog>
-
-        <p class="footnote" id="footnote-display">* Select an asset to view unit details</p>
-
-            <!-- START OF PRODUCTION TICKER & FOOTER INFRASTRUCTURE -->
+            <p class="footnote" id="footnote-display">* Select an asset to view unit details</p>
             <footer class="news-ticker-container">
                 <div class="ticker-label">BREAKING NEWS</div>
                 <div class="ticker-window">
                     <p id="news-display" class="ticker-text">Connecting to global news feed...</p>
                 </div>
             </footer>
-            
-            <!-- PORTFOLIO ATTRIBUTION LINKS PANEL -->
+
             <p class="portfolio-footer-links">
                 Built with ❤️ by Olga ·
                 <a href="https://github.com/SheillaO/Global-Uncertainty-Hedge-Platform" target="_blank">GitHub</a> ·
                 <a href="https://globalhedge.netlify.app/" target="_blank">Netlify</a> ·
                 <a href="https://global-uncertainty-hedge-platform.onrender.com/" target="_blank">API Gateway</a>
             </p>
-            
-            </main>
-            
-            <script type="module" src="index.js"></script>
-            </body>
-            
-            </html>
 
-    
-    
+        </main>
+
+        <script type="module" src="index.js"></script>
+</body>
+
+</html>

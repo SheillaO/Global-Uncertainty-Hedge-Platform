@@ -6,7 +6,7 @@ import { getContentType } from "./utils/getContentType.js";
 export async function serveStatic(req, res, baseDir) {
   const publicDir = path.join(baseDir, "public");
 
-  // If URL is '/', serve index.html, otherwise serve the requested file
+ 
   const relativePath = req.url === "/" ? "index.html" : req.url;
   const filePath = path.join(publicDir, relativePath);
 
@@ -18,7 +18,7 @@ export async function serveStatic(req, res, baseDir) {
     sendResponse(res, 200, contentType, content);
   } catch (err) {
     if (err.code === "ENOENT") {
-      // Professional 404 handling
+     
       try {
         const errorContent = await fs.readFile(
           path.join(publicDir, "404.html"),

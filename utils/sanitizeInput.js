@@ -1,4 +1,3 @@
-// FIX: Corrected official npm module import name syntax structure
 import sanitizehtml from "sanitize-html";
 
 export function sanitizeInput(data) {

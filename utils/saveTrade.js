@@ -1,4 +1,3 @@
-// saveTrade.js
 import path from "node:path";
 import fs from "node:fs/promises";
 import { getData } from "./getData.js";
@@ -8,7 +7,7 @@ export async function saveTrade(newTrade) {
   try {
     const trades = await getData();
 
-    // Use the version that cleans up the price into a number
+    
     trades.push({
       ...newTrade,
       price: parseFloat(newTrade.price) || 0,
