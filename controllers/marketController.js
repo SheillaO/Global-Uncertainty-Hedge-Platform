@@ -47,13 +47,13 @@ export async function handleGetPrice(res, symbol) {
   }
 }
 
-// 3. POST: Process an investment order execution (Dynamic Multi-User Integration)
+
 export async function handlePost(res, req) {
   try {
     const body = await parseJSONBody(req);
     const sanitizedBody = sanitizeInput(body);
 
-    // Extract dynamic form metadata parameters sent from the frontend template layout
+    
     const { commodity, currency, amount, fullName, email } = sanitizedBody;
 
     const liveData = await getAlphaPrice(commodity);
@@ -92,7 +92,7 @@ export async function handlePost(res, req) {
 
 // 4. GET: Handle the Server-Sent Events (SSE) live breaking news ticker stream
 export async function handleNews(req, res) {
-  // Clear and configure the continuous streaming content response channel
+ 
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache, no-transform",
@@ -100,12 +100,12 @@ export async function handleNews(req, res) {
     "X-Accel-Buffering": "no",
   });
 
-  // Force Render's internal gateway proxy buffers to open instantly
+ 
   if (typeof res.flushHeaders === "function") {
     res.flushHeaders();
   }
 
-  // Push starting configuration handshake string down the text wire channel
+  
   res.write(
     `data: ${JSON.stringify({ event: "news-update", story: "Connected to global marketplace news feed..." })}\n\n`,
   );
@@ -121,7 +121,7 @@ export async function handleNews(req, res) {
     );
   }, 5000);
 
-  // Free allocated background memory limits immediately when user leaves page
+  
   req.on("close", () => {
     clearInterval(intervalId);
     res.end();

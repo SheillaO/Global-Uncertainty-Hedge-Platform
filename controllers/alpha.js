@@ -3,7 +3,6 @@ import path from "node:path";
 
 /**
  * High-Frequency Market Emulation Algorithm
- * Dynamically updates prices on a minute-by-minute timeline with second-level volatility ticks
  * @param {string} commodity - The UI selection name (e.g., "GOLD", "WTI")
  */
 export async function getAlphaPrice(commodity) {
@@ -22,7 +21,7 @@ export async function getAlphaPrice(commodity) {
 
   const functionName = alphaFunctionMap[commodity.toUpperCase()];
 
-  // --- MODE 1: LIVE ALPHA VANTAGE OVERRIDE ---
+  
   if (USE_LIVE_API && functionName && API_KEY) {
     try {
       const url = `alphavantage.co{functionName}&interval=monthly&apikey=${API_KEY}`;
@@ -41,7 +40,7 @@ export async function getAlphaPrice(commodity) {
     }
   }
 
-  // --- MODE 2: HIGH-FREQUENCY MINUTE-BY-MINUTE LIVE MARKET EMULATOR ---
+  
   try {
     const historyPath = path.join(process.cwd(), "data", "marketHistory.json");
     const rawData = await fs.readFile(historyPath, "utf8");
@@ -52,7 +51,7 @@ export async function getAlphaPrice(commodity) {
       throw new Error(`Asset key metadata timeline missing for: ${commodity}`);
     }
 
-    // 1. TIME COUPLING: Bind the index pointer to current minutes instead of hours
+    
     const now = new Date();
     const currentMinute = now.getMinutes();
     const currentSecond = now.getSeconds();
@@ -61,11 +60,10 @@ export async function getAlphaPrice(commodity) {
     const targetIndex = currentMinute % priceTimeline.length;
     const historicalBasePrice = priceTimeline[targetIndex];
 
-    // 2. MATHEMATICAL OSCILLATION: Generate a secondary micro-trend wave using the current second
-    // This simulates rapid order-book bid/ask matching variance within the exact same minute
+    
     const waveFactor = Math.sin((currentSecond * Math.PI) / 30); // Generates smooth values between -1 and +1
 
-    // 3. VOLATILITY SCALING: Apply standard 0.25% algorithmic variance ticks
+    
     const maxTickVariance = historicalBasePrice * 0.0025;
     const randomNoise =
       (Math.random() * 2 - 1) * (historicalBasePrice * 0.0005); // Noise modifier

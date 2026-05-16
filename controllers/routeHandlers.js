@@ -1,16 +1,16 @@
-import { getAlphaPrice } from "./alpha.js"; // Targeting your clean new Alpha Vantage file
+import { getAlphaPrice } from "./alpha.js"; 
 import { sendResponse } from "../utils/sendResponse.js";
 import { parseJSONBody } from "../utils/parseJSONBody.js";
 import { saveTrade } from "../utils/saveTrade.js";
 import { marketRequestEmitter } from "../events/marketEvents.js";
 import { stories } from "../data/stories.js";
 
-// FIX: Helper function now correctly redirects all 7 commodity requests to Alpha Vantage
+
 async function fetchPrice(commodity) {
   return await getAlphaPrice(commodity);
 }
 
-// 1. GET: The Live Ticker
+
 export async function handleGetPrice(res, symbol) {
   try {
     if (typeof symbol !== "string") {
@@ -71,7 +71,6 @@ export async function handlePost(res, req) {
   }
 }
 
-// 3. GET: The Live News Stream (SSE)
 export async function handleNews(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
